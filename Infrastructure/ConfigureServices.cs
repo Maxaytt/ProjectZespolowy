@@ -17,8 +17,7 @@ public static class ConfigureServices
             options.UseSqlServer(connectionString, builder => builder.MigrationsAssembly("Infrastructure")));
 
         services.AddIdentity<User, IdentityRole<Guid>>()
-            .AddEntityFrameworkStores<AppDbContext>()
-            .AddSignInManager<SignInManager<User>>();
+            .AddEntityFrameworkStores<AppDbContext>();
 
         return services.AddHostedService<DbInitializer>();
     }
