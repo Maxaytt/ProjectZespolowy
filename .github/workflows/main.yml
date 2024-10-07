@@ -1,0 +1,32 @@
+name: Build Test
+
+on:
+  push:
+    branches: [ "master", "dev" ]
+  pull_request:
+    branches: [ "master", "dev" ]
+
+jobs:
+
+  check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: setup .net
+        uses: actions/setup-dotnet@v3
+        with: 
+          dotnet-version: 8.0.x
+
+      - name: restore
+        run: dotnet restore ./TeamProject.sln
+      
+      - name: build
+        run: dotnet build ./TeamProject.sln --configuration Release --no-restore
+
+      - name: tests
+        run: dotnet test ./TeamProject.sln --configuration Release --no-build
+
+      - name: publish
+        run: dotnet publish ./TeamProject.sln --configuration Release --no-build
