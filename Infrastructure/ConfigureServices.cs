@@ -10,7 +10,8 @@ public static class ConfigureServices
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        var connectionString = configuration.GetConnectionString("DefaultConnection");
+        var connectionString = configuration.GetConnectionString("DefaultConnection")
+            ?? throw new InvalidOperationException("DefaultConnection does not exist");
         
         services.AddDbContext<AppDbContext>(options =>
             options.UseSqlServer(connectionString, builder => builder.MigrationsAssembly("Infrastructure")));
