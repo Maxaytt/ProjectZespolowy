@@ -12,6 +12,28 @@ public class AuthController(SignInManager<User> signIn, UserManager<User> userMa
     private readonly UserManager<User> userManager = userManager;
 
     [HttpGet]
+    public IActionResult Login()
+    {
+        return View("Login");
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Login(string email, string password)
+    {
+        var user = await signIn.UserManager.FindByEmailAsync(email);
+        if (user is null) return NotFound($"User {email} not found");
+
+        var result = await signIn.PasswordSignInAsync(user, password, false, false);
+
+        if (!result.Succeeded)
+        {
+            throw new Exception("Login fail");
+        }
+
+        return RedirectToAction("Index", "Home");
+    }
+
+    [HttpGet]
     public IActionResult Register()
     {
         var model = new RegisterViewModel();
