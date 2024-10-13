@@ -68,10 +68,10 @@ public class AuthController(SignInManager<User> signIn, UserManager<User> userMa
 
         return RedirectToAction("Login", "Auth");
     }
-    
+
     public async Task<IActionResult> Logout()
     {
         await signIn.SignOutAsync();
-        return RedirectToAction(nameof(Login), "Auth");
+        return RedirectToAction(nameof(AuthController.Login), "Auth");
     }
 }
