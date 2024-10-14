@@ -1,14 +1,89 @@
 ﻿@{
-    ViewData["Title"] = "Login  Page";
+    ViewData["Title"] = "Login Page";
 }
 @{
     Layout = null;
 }
 <head>
     <meta name="viewport" content="width=device-width" />
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="~/css/auth/login.css">
     <title>Login</title>
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
 
+        .login-container {
+            width: 400px;
+            background-color: #ffffff;
+            position: absolute;
+            transform: translate(-50%, -50%);
+            top: 50%;
+            left: 50%;
+            border-radius: 10px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 40px rgba(8, 7, 16, 0.6);
+            padding: 30px 25px 5px 25px;
+        }
+
+            .login-container * {
+                font-family: 'Poppins', sans-serif;
+                color: #000000;
+                letter-spacing: 0.5px;
+                outline: none;
+                border: none;
+            }
+
+            .login-container h2 {
+                font-size: 28px;
+                font-weight: 500;
+                line-height: 38px;
+                text-align: center;
+                margin-bottom: 20px;
+            }
+
+        .form-group label {
+            display: block;
+            margin-top: 15px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            display: block;
+            height: 35px;
+            width: 100%;
+            background-color: #ffffff;
+            color: #000000;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 3px;
+            padding: 0 10px;
+            margin-top: 8px;
+            font-size: 12px;
+            font-weight: 300;
+        }
+
+        ::placeholder {
+            color: #6c757d;
+        }
+
+        .btn-primary {
+            margin-top: 10px;
+            width: 100%;
+            background-color: #007bff;
+            color: #ffffff;
+            padding: 10px 0;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .text-center a {
+            color: #007bff;
+        }
+    </style>
 </head>
 <body>
     <div class="login-container">
@@ -16,16 +91,20 @@
         <form method="post" asp-action="Login" asp-controller="Auth">
             <div class="form-group">
                 <label for="Email">Email</label>
-                <input type="text" id="Email" name="Email" required />
+                <input type="text" id="Email" name="Email" required class="form-control" />
             </div>
             <div class="form-group">
                 <label for="Password">Password</label>
-                <input type="password" id="Password" name="Password" required />
+                <input type="password" id="Password" name="Password" required class="form-control" />
             </div>
-            <div class="form-group">
-                <button type="submit">Login</button>
+            <div class="form-group text-center">
+                <button type="submit" class="btn btn-primary w-100">Login</button>
             </div>
         </form>
-        <p class="text-center"> <a asp-action="Register">Don't have an account?</a></p>
+        <p class="text-center mt-3">
+            <a asp-action="Register" asp-controller="Auth">Don't have an account?</a>
+        </p>
     </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
 </body>
