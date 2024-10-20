@@ -1,21 +1,32 @@
-using System.Diagnostics;
+using Domain.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Web.Models;
+using System.Diagnostics;
+using Microsoft.EntityFrameworkCore;
+using Infrastructure;
+using Domain.ViewModel;
+using Mapster;
 
 namespace Web.Controllers;
 
 public class HomeController : Controller
 {
-    private readonly ILogger<HomeController> _logger;
-
-    public HomeController(ILogger<HomeController> logger)
+    private AppDbContext dbContext { get; set; }
+    public HomeController(AppDbContext _dbContext)
     {
-        _logger = logger;
+        dbContext = _dbContext;
     }
 
-    public IActionResult Index()
+    [HttpGet]
+    public async Task<ActionResult> Index()
     {
-        return View();
+        var films = await dbContext.Films
+            //.Include(p => p.Image)
+            .ToListAsync();
+
+        var vmList = films.Adapt<List<FilmVm>>();
+
+        return View(vmList);
     }
 
     public IActionResult Privacy()
