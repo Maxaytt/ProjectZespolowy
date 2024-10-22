@@ -7,13 +7,16 @@
 
         <IsPackable>false</IsPackable>
         <IsTestProject>true</IsTestProject>
+        <PreserveCompilationContext>true</PreserveCompilationContext>
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="AutoFixture.Xunit2" Version="4.18.1" />
         <PackageReference Include="coverlet.collector" Version="6.0.0"/>
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.10" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.10" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0"/>
+        <PackageReference Include="Selenium.WebDriver" Version="4.25.0" />
+        <PackageReference Include="Shouldly" Version="4.2.1" />
         <PackageReference Include="xunit" Version="2.5.3"/>
         <PackageReference Include="xunit.runner.visualstudio" Version="2.5.3"/>
     </ItemGroup>
@@ -24,6 +27,15 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Web\Web.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Attributes\" />
+      <Folder Include="Services\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="Attributes\TestSetupAttribute.cs" />
     </ItemGroup>
 
 </Project>
