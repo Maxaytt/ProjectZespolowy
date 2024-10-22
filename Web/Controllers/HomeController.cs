@@ -21,7 +21,7 @@ public class HomeController : Controller
     public async Task<ActionResult> Index()
     {
         var films = await dbContext.Films
-            //.Include(p => p.Image)
+            .Include(p => p.Image)
             .ToListAsync();
 
         var vmList = films.Adapt<List<FilmVm>>();

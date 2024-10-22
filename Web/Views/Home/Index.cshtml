@@ -1,33 +1,29 @@
 ﻿@model IEnumerable<Domain.ViewModel.FilmVm>
+
 @{
     ViewBag.Title = "Create Film";
 }
-<div class="container-fluid">
-    <div class="row">
-        @foreach (var film in Model)
-        {
-            <div class="col">
-                <div class="card shadow-sm" style="width: 320px">
+    <div class="container-fluid">
+        <div class="row">
+
+            @foreach (var film in Model)
+            {
+                <div class="col mb-4">
+                    <div class="card shadow-sm" style="width: 320px">
                     <a href="@Url.Action("PlayFilm", "Films", new {id = film.Id})">
-                        <img class="card-img-top"
-                             src="@Url.Action("GetImageAsResource", "Films", new {id=film.ImageId})" alt="@film.Name"
-                             height="180">
+                            <img class="card-img-top" 
+                            src="@Url.Action("GetImageAsResource", "Films", new {id=film.ImageId})" alt="@film.Name"
+                            height="180">
                     </a>
 
                     <h5 class="card-title" style="text-align:center">@film.Name</h5>
-                    <div class="card-body">
-                        <a href="/Films/Edit/@film.Id" class="btn btn-primary">Edit</a>
+                        <div class="card-body">
+                            <a href="/Films/Edit/@film.Id"  class="btn btn-primary">Edit</a>
                         <button class="btn btn-danger" onclick="DeleteFilm('@film.Id')">Delete</button>
+                        </div>
                     </div>
                 </div>
 
-                <div style="position: relative; top: -240px; left: 115px; width:90px;">
-                    <a href="@Url.Action("PlayFilm", "Films", new {id = film.Id})">
-                        <img src="~/assets/PlayFilmIcon.png" width="90" height="90" />
-                    </a>
-                </div>
-            </div>
-
-        }
+            }
+        </div>
     </div>
-</div>

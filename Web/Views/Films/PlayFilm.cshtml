@@ -1,0 +1,5 @@
+﻿@model Domain.ViewModel.PlayFilmVm
+<h1>@Model.Name</h1>
+<video controls width="800" height="450">
+    <source src="@Url.Action("GetFilmAsResource", "Films", new {id = Model.Id})" type="@Model.ContentType" />
+</video>
