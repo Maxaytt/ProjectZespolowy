@@ -45,7 +45,7 @@ public class AuthController(SignInManager<User> signIn, UserManager<User> userMa
     {
         if (!ModelState.IsValid)
         {
-            return RedirectToAction("Login");
+            return RedirectToAction("Register");
         }
 
         var user = await signIn.UserManager.FindByEmailAsync(model.Email);
