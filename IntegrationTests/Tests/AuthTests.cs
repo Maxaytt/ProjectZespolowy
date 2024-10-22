@@ -45,6 +45,25 @@ public class AuthTests : IDisposable
             errorMessage.ShouldContain("already exists");
         }
     }
+    
+    [Fact]
+    public void Should_Redirect_When_Login()
+    {
+        // Arrange
+        const string email = "testuser@example.com";
+        const string password = "Qwer1234!";
+        
+        // Act
+        Driver.Navigate().GoToUrl("http://localhost:5000/");
+        
+        Driver.FindElement(By.Id("Email")).SendKeys(email);
+        Driver.FindElement(By.Id("Password")).SendKeys(password);
+        
+        Driver.FindElement(By.CssSelector("button[type='submit']")).Click();
+        
+        // Assert
+        Driver.Url.ShouldBe("http://localhost:5000/Home/Index");
+    }
 
     public void Dispose()
     {
