@@ -1,0 +1,27 @@
+﻿@model Domain.ViewModel.CreateEditFilmVm
+
+@{
+    ViewBag.Title = "Create Film";
+}
+@section style
+{
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+}
+<div class="container">
+    <h2>Create Film</h2>
+    <form asp-action="Create" asp-controller="Films" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="Name">Name</label>
+            <input asp-for="Name" type="text" class="form-control" id="Name" name="Name" required />
+        </div>
+        <div class="form-group">
+            <label for="Content">Video</label>
+            <input asp-for="VideoFile" type="file" accept="video/mp4, video/ogg, video/webm" />
+        </div>
+        <div class="form-group">
+            <label for="Content">Image</label>
+            <input asp-for="ImageFile" type="file" accept="image/jpg, image/png, image/jpeg, image/webp, image/avif, image/svg+xml, image/x-icon, image/bmp	" required />
+        </div>
+        <button type="submit" class="btn btn-primary">Create</button>
+    </form>
+</div>
