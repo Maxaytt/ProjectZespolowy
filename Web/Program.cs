@@ -1,7 +1,11 @@
+using Domain.Models;
 using Infrastructure;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddControllersWithViews();
 builder.Services.AddInfrastructure(builder.Configuration, builder.Environment);
 
