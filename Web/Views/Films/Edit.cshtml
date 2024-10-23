@@ -1,0 +1,25 @@
+﻿@model Domain.ViewModel.CreateEditFilmVm
+
+<h1>Edit Film</h1>
+<form asp-action="EditAndAdd" asp-controller="Films" method="post" enctype="multipart/form-data">
+    <label asp-for="Name" id="NameFieldset">Name</label>
+    <input asp-for="Name" />
+    <br />
+
+    <input type="checkbox" id="checkboxForVideo" /> <label asp-for="VideoFile">Video File</label>
+    <fieldset id="VideoFileFieldset" disabled>
+        <input asp-for="VideoFile" />
+    </fieldset>
+    <br />
+
+    <input type="checkbox" id="checkboxForImage" /><label asp-for="ImageFile">Image File</label>
+    <fieldset id="ImageFileFieldset" disabled>
+        <input asp-for="ImageFile" />
+    </fieldset>
+    <br />
+
+    <input asp-for="Id" hidden />
+    <button type="submit" class="btn btn-primary">Edit</button>
+</form>
+
+<script src="~/js/EditFilm.js"></script>

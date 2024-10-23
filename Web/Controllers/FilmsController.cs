@@ -1,9 +1,8 @@
 ﻿using Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Domain.Models;
-using Domain.ViewModels;
-using Microsoft.EntityFrameworkCore;
 using Domain.ViewModel;
+using Microsoft.EntityFrameworkCore;
 
 namespace Web.Controllers;
 
@@ -33,6 +32,7 @@ public class FilmsController : Controller
     {
         return View();
     }
+
 
     [HttpPost]
     public IActionResult Create(CreateEditFilmVm film)
@@ -72,6 +72,65 @@ public class FilmsController : Controller
         return RedirectToAction("Index", "Home");
     }
 
+    [HttpGet("Edit/{id:guid}")]
+    public IActionResult Edit(Guid id)
+    {
+        var film = _dbContext.Films.Find(id);
+        if (film is null) return NotFound($"film with id: {id} not found");
+
+        var viewModel = new CreateEditFilmVm
+        {
+            Name = film.Name
+        };
+        viewModel.Id = id;
+        return View(viewModel);
+    }
+
+
+    [HttpPost("EditAndAdd")]
+    public IActionResult EditAndAdd(CreateEditFilmVm ViewModel)
+    {
+        var existingFilm = _dbContext.Films
+            .Include(f => f.Image)
+            .First(f => f.Id == ViewModel.Id);
+
+        if (ViewModel.Name is not null)
+        {
+            existingFilm.Name = ViewModel.Name;
+            existingFilm.Image.Caption = ViewModel.Name;
+        }
+
+        if (ViewModel.ImageFile is not null)
+        {
+            using var item = new MemoryStream();
+            ViewModel.ImageFile.CopyTo(item);
+            existingFilm.Image.Content = item.ToArray();
+        }
+
+        if (ViewModel.VideoFile is not null)
+        {
+            using var item = new MemoryStream();
+            ViewModel.VideoFile.CopyTo(item);
+            existingFilm.Content = item.ToArray();
+        }
+        _dbContext.Films.Update(existingFilm);
+        _dbContext.SaveChanges();
+        return RedirectToAction("Index", "Home");
+    }
+
+    [HttpGet("Delete")]
+    public IActionResult Delete(Guid id)
+    {
+        var film = _dbContext.Films.Find(id);
+        if (film is null)
+            return NotFound();
+
+        _dbContext.Films.Remove(film);
+        _dbContext.SaveChanges();
+
+        return RedirectToAction(nameof(Index), "Home");
+    }
+
     [HttpGet("GetFilmAsResource/{id:guid}")]
     public IActionResult GetFilmAsResource(Guid id)
     {
@@ -107,5 +166,3 @@ public class FilmsController : Controller
         return View(viewModel);
     }
 }
-
-
