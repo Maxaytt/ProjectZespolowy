@@ -23,10 +23,10 @@ jobs:
         run: dotnet restore ./TeamProject.sln
       
       - name: build
-        run: dotnet build ./TeamProject.sln --configuration Release --no-restore
+        run: dotnet build ./TeamProject.sln --configuration Test --no-restore
 
       - name: tests
-        run: dotnet test ./TeamProject.sln --configuration Release --no-build
+        run: dotnet test ./TeamProject.sln --configuration Test --no-build
 
       - name: publish
-        run: dotnet publish ./TeamProject.sln --configuration Release --no-build
+        run: dotnet publish ./TeamProject.sln --configuration Test --no-build
