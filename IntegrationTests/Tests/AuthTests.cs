@@ -2,6 +2,7 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Edge;
 using OpenQA.Selenium.Support.UI;
 using Shouldly;
+using Xunit.Priority;
 
 namespace IntegrationTests.Tests;
 
@@ -11,7 +12,7 @@ public class AuthTests : IDisposable
 
     private const string BaseUrl = "http://localhost:5000/";
     
-    [Fact]
+    [Fact, Priority(0)]
     public void Should_RedirectOrConflict_When_Register()
     {
         // Arrange
@@ -46,7 +47,7 @@ public class AuthTests : IDisposable
         }
     }
     
-    [Fact]
+    [Fact, Priority(1)]
     public void Should_Redirect_When_Login()
     {
         // Arrange
