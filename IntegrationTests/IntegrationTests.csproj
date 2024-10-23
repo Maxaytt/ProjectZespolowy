@@ -31,11 +31,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Attributes\" />
-      <Folder Include="Services\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <Compile Remove="Attributes\TestSetupAttribute.cs" />
     </ItemGroup>
 
