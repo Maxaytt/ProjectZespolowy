@@ -2,6 +2,7 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Edge;
 using OpenQA.Selenium.Support.UI;
 using Shouldly;
+using Xunit.Priority;
 
 namespace IntegrationTests.Tests;
 
@@ -11,7 +12,7 @@ public class AuthTests : IDisposable
 
     private const string BaseUrl = "http://localhost:5000/";
     
-    [Fact]
+    [Fact, Priority(0)]
     public void Should_RedirectOrConflict_When_Register()
     {
         // Arrange
@@ -44,6 +45,25 @@ public class AuthTests : IDisposable
             var errorMessage = Driver.FindElement(By.TagName("pre")).Text;
             errorMessage.ShouldContain("already exists");
         }
+    }
+    
+    [Fact, Priority(1)]
+    public void Should_Redirect_When_Login()
+    {
+        // Arrange
+        const string email = "testuser@example.com";
+        const string password = "Qwer1234!";
+        
+        // Act
+        Driver.Navigate().GoToUrl("http://localhost:5000/");
+        
+        Driver.FindElement(By.Id("Email")).SendKeys(email);
+        Driver.FindElement(By.Id("Password")).SendKeys(password);
+        
+        Driver.FindElement(By.CssSelector("button[type='submit']")).Click();
+        
+        // Assert
+        Driver.Url.ShouldBe("http://localhost:5000/Home/Index");
     }
 
     public void Dispose()
