@@ -118,7 +118,7 @@ public class FilmsController : Controller
         return RedirectToAction("Index", "Home");
     }
 
-    [HttpDelete("Delete/{id:guid}")]
+    [HttpGet("Delete")]
     public IActionResult Delete(Guid id)
     {
         var film = _dbContext.Films.Find(id);
@@ -128,7 +128,7 @@ public class FilmsController : Controller
         _dbContext.Films.Remove(film);
         _dbContext.SaveChanges();
 
-        return Ok();
+        return RedirectToAction(nameof(Index), "Home");
     }
 
     [HttpGet("GetFilmAsResource/{id:guid}")]
