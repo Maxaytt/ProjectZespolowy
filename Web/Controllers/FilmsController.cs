@@ -73,16 +73,20 @@ public class FilmsController : Controller
     }
 
     [HttpGet("Edit/{id:guid}")]
-    public IActionResult Edit(Guid id)
+    public async Task<IActionResult> Edit(Guid id)
     {
-        var film = _dbContext.Films.Find(id);
+        var film = await _dbContext.Films
+            .Include(film => film.Questions)
+            .FirstOrDefaultAsync(film => film.Id == id);
+        
         if (film is null) return NotFound($"film with id: {id} not found");
 
         var viewModel = new CreateEditFilmVm
         {
-            Name = film.Name
+            Id = id,
+            Name = film.Name,
+            Questions = film.Questions
         };
-        viewModel.Id = id;
         return View(viewModel);
     }
 
