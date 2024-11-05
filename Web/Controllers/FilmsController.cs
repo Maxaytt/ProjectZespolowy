@@ -169,4 +169,39 @@ public class FilmsController : Controller
         };
         return View(viewModel);
     }
+    
+    [HttpGet("DeleteQuestion")]
+    public IActionResult DeleteQuestion(Guid id)
+    {
+        var question = _dbContext.Questions.Find(id);
+        if (question is null)
+            return NotFound();
+
+        _dbContext.Questions.Remove(question);
+        _dbContext.SaveChanges();
+
+        var refererUrl = Request.Headers.Referer.ToString();
+        if (!string.IsNullOrEmpty(refererUrl))
+        {
+            return Redirect(refererUrl);
+        }
+        
+        return RedirectToAction(nameof(Index), "Home");
+    }
+
+    [HttpGet("AddQuestion")]
+    public async Task<IActionResult> AddQuestion(string text, Guid filmId)
+    {
+        var question = new Question
+        {
+            Id = Guid.NewGuid(),
+            FilmId = filmId,
+            Text = text
+        };
+
+        await _dbContext.Questions.AddAsync(question);
+        await _dbContext.SaveChangesAsync();
+
+        return RedirectToAction(nameof(Edit), new { id = filmId });
+    }
 }
