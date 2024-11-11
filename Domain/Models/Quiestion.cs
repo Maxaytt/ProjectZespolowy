@@ -7,4 +7,6 @@ public class Question
     public Guid FilmId { get; set; }
     public Film Film { get; set; } = null!;
     public ICollection<Answer> Answers { get; set; } = null!;
+
+    public bool IsIncludedInTest { get; set; }
 }

@@ -10,4 +10,6 @@ public class CreateEditFilmVm
     public IFormFile ImageFile { get; set; } = null!;
     public string Name { get; set; } = null!;
     public List<Question> Questions { get; set; } = null!;
+
+    public int NumberOfQuestions { get; set; }
 }
