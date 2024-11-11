@@ -96,6 +96,7 @@ public class FilmsController : Controller
     {
         var existingFilm = _dbContext.Films
             .Include(f => f.Image)
+            .Include(f => f.Questions)
             .First(f => f.Id == ViewModel.Id);
 
         if (ViewModel.Name is not null)
@@ -117,10 +118,28 @@ public class FilmsController : Controller
             ViewModel.VideoFile.CopyTo(item);
             existingFilm.Content = item.ToArray();
         }
+
+        if (ViewModel.NumberOfQuestions >= 0)
+        {
+            foreach (var question in existingFilm.Questions)
+            {
+                question.IsIncludedInTest = false;
+            }
+
+            var questionsToInclude = existingFilm.Questions.Take(ViewModel.NumberOfQuestions);
+            foreach (var question in questionsToInclude)
+            {
+                question.IsIncludedInTest = true;
+            }
+        }
+
         _dbContext.Films.Update(existingFilm);
         _dbContext.SaveChanges();
+
         return RedirectToAction("Index", "Home");
     }
+
+
 
     [HttpGet("Delete")]
     public IActionResult Delete(Guid id)
@@ -202,6 +221,30 @@ public class FilmsController : Controller
         await _dbContext.Questions.AddAsync(question);
         await _dbContext.SaveChangesAsync();
 
-        return RedirectToAction(nameof(Edit), new { id = filmId });
+        // Перенаправление на страницу вопросов для текущего фильма
+        return RedirectToAction("Questions", new { filmId = filmId });
     }
+
+    [HttpGet("Questions/{filmId:guid}")]
+    public IActionResult Questions(Guid filmId)
+    {
+        var film = _dbContext.Films
+            .Include(f => f.Questions)
+            .FirstOrDefault(f => f.Id == filmId);
+
+        if (film == null)
+        {
+            return NotFound();
+        }
+
+        var viewModel = new FilmQuestionsVm
+        {
+            FilmId = film.Id,
+            FilmName = film.Name,
+            Questions = film.Questions.ToList()
+        };
+
+        return View(viewModel);
+    }
+
 }
