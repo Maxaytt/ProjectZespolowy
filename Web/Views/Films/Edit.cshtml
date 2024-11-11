@@ -18,6 +18,12 @@
     </fieldset>
     <br />
 
+<div class="form-group">
+        <label asp-for="NumberOfQuestions">number questions in test</label>
+        <input asp-for="NumberOfQuestions" type="number" class="form-control" min="0" max="@Model.Questions.Count" />
+    </div>
+    <br />
+
     <input asp-for="Id" hidden />
     <button type="submit" class="btn btn-primary">Edit</button>
 </form>
@@ -26,10 +32,10 @@
 <div id="question-list">
     @foreach (var question in Model.Questions)
     {
-    <div class="rounded p-3 mb-3 bg-light d-flex justify-content-between align-items-center border">
-        <span>@question.Text</span>
-        <a class="btn btn-danger" asp-action="DeleteQuestion" asp-route-id="@question.Id">Delete</a>
-    </div>
+            <div class="rounded p-3 mb-3 bg-light d-flex justify-content-between align-items-center border">
+                <span>@question.Text (@(question.IsIncludedInTest ? "Включен в тест" : "Не включен"))</span>
+                <a class="btn btn-danger" asp-action="DeleteQuestion" asp-route-id="@question.Id">Delete</a>
+            </div>
     }
     <form asp-action="AddQuestion" method="get" class="mt-4 d-flex">
         <input type="hidden" name="filmId" value="@Model.Id" />

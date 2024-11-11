@@ -1,0 +1,31 @@
+﻿@model Domain.ViewModel.FilmQuestionsVm
+
+@{
+    ViewData["Title"] = "Film questions";
+}
+
+<h1>@Model.FilmName</h1>
+<h2>Test</h2>
+
+<div>
+    @if (Model.Questions != null && Model.Questions.Any())
+    {
+        int questionNumber = 1;
+        foreach (var question in Model.Questions)
+        {
+            <div style="margin-bottom: 15px;">
+                <strong>@questionNumber.</strong> @question.Text
+            </div>
+            questionNumber++;
+        }
+    }
+    else
+    {
+        <p>No questions.</p>
+    }
+</div>
+
+<div style="margin-top: 20px;">
+    <a href="@Url.Action("Index", "Home")" class="btn btn-success">Finish</a>
+</div>
+
