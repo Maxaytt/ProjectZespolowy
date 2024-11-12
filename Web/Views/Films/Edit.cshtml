@@ -28,13 +28,4 @@
     <button type="submit" class="btn btn-primary">Edit</button>
 </form>
 
-<h1>Questions</h1>
-<div id="question-list">
-    <form asp-action="AddQuestion" method="get" class="mt-4 d-flex">
-        <input type="hidden" name="filmId" value="@Model.Id" />
-        <input type="text" id="questionText" name="text" class="form-control me-2" placeholder="Add Question" required/>
-        <button type="submit" class="btn btn-primary">Add</button>
-    </form>
-</div>
-
 <script src="~/js/EditFilm.js"></script>
