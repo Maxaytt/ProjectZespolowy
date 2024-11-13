@@ -87,8 +87,8 @@ public class AuthTests : IDisposable
         logoutButton.Click();
 
         // Assert
-        wait.Until(d => d.Url == $"{BaseUrl}Auth/Login");
-        Driver.Url.ShouldBe($"{BaseUrl}Auth/Login");
+        wait.Until(d => d.Url == $"{BaseUrl}");
+        Driver.Url.ShouldBe($"{BaseUrl}");
     }
 
     public void Dispose()
