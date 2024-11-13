@@ -1,6 +1,7 @@
 using OpenQA.Selenium;
 using OpenQA.Selenium.Edge;
 using OpenQA.Selenium.Support.UI;
+using SeleniumExtras.WaitHelpers;
 using Shouldly;
 using Xunit.Priority;
 
@@ -64,6 +65,30 @@ public class AuthTests : IDisposable
         
         // Assert
         Driver.Url.ShouldBe("http://localhost:5000/Home/Index");
+    }
+    
+    [Fact, Priority(2)]
+    public void Should_RedirectToLogin_When_Logout()
+    {
+        // Arrange
+        const string email = "testuser@example.com";
+        const string password = "Qwer1234!";
+
+        // Act
+        Driver.Navigate().GoToUrl(BaseUrl);
+        Driver.FindElement(By.Id("Email")).SendKeys(email);
+        Driver.FindElement(By.Id("Password")).SendKeys(password);
+        Driver.FindElement(By.CssSelector("button[type='submit']")).Click();
+
+        var wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(10));
+        wait.Until(d => d.Url == $"{BaseUrl}Home/Index");
+        
+        var logoutButton = wait.Until(ExpectedConditions.ElementToBeClickable(By.Id("logoutButton")));
+        logoutButton.Click();
+
+        // Assert
+        wait.Until(d => d.Url == $"{BaseUrl}Auth/Login");
+        Driver.Url.ShouldBe($"{BaseUrl}Auth/Login");
     }
 
     public void Dispose()
