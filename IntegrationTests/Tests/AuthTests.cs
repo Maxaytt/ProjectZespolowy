@@ -6,6 +6,7 @@ using Xunit.Priority;
 
 namespace IntegrationTests.Tests;
 
+[TestCaseOrderer(PriorityOrderer.Name, PriorityOrderer.Assembly)]
 public class AuthTests : IDisposable
 {
     public readonly IWebDriver Driver = new EdgeDriver();
