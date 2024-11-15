@@ -1,4 +1,5 @@
-﻿using OpenQA.Selenium;
+﻿using Domain.Models;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Edge;
 using OpenQA.Selenium.Support.UI;
 using Shouldly;
@@ -19,8 +20,22 @@ public class FilmTests : IDisposable
         const string email = "testuser@example.com";
         const string password = "Qwer1234!";
         const string filmTitle = "Test Film";
-        const string filmVideoPath = @"C:\Users\Acer\Downloads\Как капибары принимают горячую ванну в японском зоопарке.mp4"; 
-        const string filmImagePath = @"C:\Users\Acer\Pictures\Day\image.jpg";
+       
+        var filmVideoPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Tests", "Assets", "TestVideo.mp4");
+        Console.WriteLine($"FilmPath: {filmVideoPath}");
+
+        if (!File.Exists(filmVideoPath)) 
+        {
+            throw new FileNotFoundException($"Film not found: {filmVideoPath}");
+        }
+
+        var filmImagePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Tests", "Assets", "TestImage.png");
+        Console.WriteLine($"ImagePath: {filmImagePath}");
+
+        if (!File.Exists(filmImagePath)) 
+        {
+            throw new FileNotFoundException($"Image not found: {filmImagePath}");
+        }
 
         // Step 1: Авторизация пользователя
         Driver.Navigate().GoToUrl(BaseUrl);
