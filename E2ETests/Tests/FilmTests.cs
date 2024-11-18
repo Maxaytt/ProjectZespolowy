@@ -10,15 +10,14 @@ public class FilmTests : IDisposable
 {
     public readonly IWebDriver Driver = new EdgeDriver();
     private const string BaseUrl = "http://localhost:5000/";
+    private const string Email = "testuser@example.com";
+    private const string Password = "Qwer1234!";
+    private const string FilmTitle = "Test Film";
 
     [Fact, Priority(0)]
     public void Should_AddFilm_When_ValidData()
     {
         // Arrange
-        const string email = "testuser@example.com";
-        const string password = "Qwer1234!";
-        const string filmTitle = "Test Film";
-       
         var incompleteVideoPath = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "TestVideo.mp4");
         var videoPath = Path.GetFullPath(incompleteVideoPath);
 
@@ -37,8 +36,8 @@ public class FilmTests : IDisposable
         
         // Act
         Driver.Navigate().GoToUrl(BaseUrl);
-        Driver.FindElement(By.Id("Email")).SendKeys(email);
-        Driver.FindElement(By.Id("Password")).SendKeys(password);
+        Driver.FindElement(By.Id("Email")).SendKeys(Email);
+        Driver.FindElement(By.Id("Password")).SendKeys(Password);
         Driver.FindElement(By.CssSelector("button[type='submit']")).Click();
         
         var wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(10));
@@ -48,7 +47,7 @@ public class FilmTests : IDisposable
         
         wait.Until(d => d.FindElement(By.Id("Name")).Displayed);
 
-        Driver.FindElement(By.Id("Name")).SendKeys(filmTitle);
+        Driver.FindElement(By.Id("Name")).SendKeys(FilmTitle);
 
         Driver.FindElement(By.Name("VideoFile")).SendKeys(videoPath);
         Driver.FindElement(By.Name("ImageFile")).SendKeys(imagePath); 
@@ -60,6 +59,32 @@ public class FilmTests : IDisposable
         // Assert
         Driver.Url.ShouldBe($"{BaseUrl}Home/Index");
         Driver.FindElement(By.ClassName("film-item")).ShouldNotBeNull();
+    }
+    
+    [Fact, Priority(1)]
+    public void Should_UpdateFilm_When_Edit()
+    {
+        // Arrange
+        var uniqueName = Guid.NewGuid().ToString();
+
+        // Act 
+        Driver.Navigate().GoToUrl("http://localhost:5000/");
+        Driver.FindElement(By.Id("Email")).SendKeys(Email);
+        Driver.FindElement(By.Id("Password")).SendKeys(Password);
+        Driver.FindElement(By.CssSelector("button[type='submit']")).Click();
+        
+        var firstFilmEditLink = Driver.FindElement(By.CssSelector("a.btn.btn-primary[href*='/Films/Edit']"));
+        firstFilmEditLink.Click();
+        
+        var nameField = Driver.FindElement(By.Id("Name"));
+        nameField.Clear();
+        nameField.SendKeys(uniqueName);
+        Driver.FindElement(By.CssSelector("button[type='submit']")).Click();
+
+        // Assert
+        Driver.Navigate().GoToUrl("http://localhost:5000/Home/Index");
+        var updatedFilm = Driver.FindElements(By.XPath($"//*[text()='{uniqueName}']"));
+        updatedFilm.Count.ShouldBe(1, "Updated film with unique name was not found.");
     }
 
     public void Dispose()
