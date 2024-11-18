@@ -59,6 +59,7 @@ public class FilmTests : IDisposable
         
         // Assert
         Driver.Url.ShouldBe($"{BaseUrl}Home/Index");
+        Driver.FindElement(By.ClassName("film-item")).ShouldNotBeNull();
     }
 
     public void Dispose()
