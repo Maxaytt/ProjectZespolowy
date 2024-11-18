@@ -24,12 +24,10 @@ public class FilmTests : IDisposable
         Driver.FindElement(By.Id("Password")).SendKeys(password);
         Driver.FindElement(By.CssSelector("button[type='submit']")).Click();
         
-        Driver.Navigate().GoToUrl("http://localhost:5000/Home/Index");
         var firstFilmEditLink = Driver.FindElement(By.CssSelector("a.btn.btn-primary[href*='/Films/Edit']"));
         firstFilmEditLink.Click();
         
         var nameField = Driver.FindElement(By.Id("Name"));
-        var oldName = nameField.GetAttribute("value");
         nameField.Clear();
         nameField.SendKeys(uniqueName);
         Driver.FindElement(By.CssSelector("button[type='submit']")).Click();
@@ -38,13 +36,6 @@ public class FilmTests : IDisposable
         Driver.Navigate().GoToUrl("http://localhost:5000/Home/Index");
         var updatedFilm = Driver.FindElements(By.XPath($"//*[text()='{uniqueName}']"));
         Assert.True(updatedFilm.Count > 0, "Updated film with unique name was not found.");
-        
-        firstFilmEditLink = Driver.FindElement(By.CssSelector("a.btn.btn-primary[href*='/Films/Edit']"));
-        firstFilmEditLink.Click();
-        nameField = Driver.FindElement(By.Id("Name"));
-        nameField.Clear();
-        nameField.SendKeys(oldName);
-        Driver.FindElement(By.CssSelector("button[type='submit']")).Click();
     }
 
     public void Dispose()
