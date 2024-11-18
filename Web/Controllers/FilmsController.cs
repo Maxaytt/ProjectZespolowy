@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Domain.Models;
 using Domain.ViewModel;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace Web.Controllers;
 
@@ -126,7 +127,14 @@ public class FilmsController : Controller
                 question.IsIncludedInTest = false;
             }
 
-            var questionsToInclude = existingFilm.Questions.Take(ViewModel.NumberOfQuestions);
+            var random = new Random();
+
+            var questionsToInclude = existingFilm.Questions
+                .AsEnumerable()
+                .OrderBy(q => random.Next())
+                .Take(ViewModel.NumberOfQuestions)
+                .ToList();
+
             foreach (var question in questionsToInclude)
             {
                 question.IsIncludedInTest = true;
@@ -237,11 +245,16 @@ public class FilmsController : Controller
             return NotFound();
         }
 
+        var random = new Random();
+
         var viewModel = new FilmQuestionsVm
         {
             FilmId = film.Id,
             FilmName = film.Name,
-            Questions = film.Questions.ToList()
+            Questions = film.Questions
+                .AsEnumerable()
+                .OrderBy(q => random.Next())
+                .ToList()
         };
 
         return View(viewModel);
