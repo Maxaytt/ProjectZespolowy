@@ -27,3 +27,6 @@ function setOrUnsetInputForImage() {
 }
 checkboxForImage.addEventListener("click", setOrUnsetInputForImage);
 checkboxForVideo.addEventListener("click", setOrUnsetInputForVideo);
+
+
+
