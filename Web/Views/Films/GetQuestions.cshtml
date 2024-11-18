@@ -13,13 +13,10 @@
         int questionNumber = 1;
         foreach (var question in Model.Questions)
         {
-            if (question.IsIncludedInTest)
-            {
                 <div style="margin-bottom: 15px;">
                     <strong>@questionNumber.</strong> @question.Text
                 </div>
                 questionNumber++;
-            }
         }
     }
     else
