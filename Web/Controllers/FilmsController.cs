@@ -233,7 +233,7 @@ public class FilmsController : Controller
         return RedirectToAction("Questions", new { filmId = filmId });
     }
 
-    [HttpGet("Questions/{filmId:guid}")]
+    [HttpGet("Film/{filmId:guid}/Questions")]
     public IActionResult Questions(Guid filmId)
     {
         var film = _dbContext.Films
