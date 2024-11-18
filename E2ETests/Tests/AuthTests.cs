@@ -5,7 +5,7 @@ using SeleniumExtras.WaitHelpers;
 using Shouldly;
 using Xunit.Priority;
 
-namespace IntegrationTests.Tests;
+namespace E2ETests.Tests;
 
 public class AuthTests : IDisposable
 {
