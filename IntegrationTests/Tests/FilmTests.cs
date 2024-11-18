@@ -35,7 +35,7 @@ public class FilmTests : IDisposable
         // Assert
         Driver.Navigate().GoToUrl("http://localhost:5000/Home/Index");
         var updatedFilm = Driver.FindElements(By.XPath($"//*[text()='{uniqueName}']"));
-        Assert.True(updatedFilm.Count > 0, "Updated film with unique name was not found.");
+        updatedFilm.Count.ShouldBe(1, "Updated film with unique name was not found.");
     }
 
     public void Dispose()
