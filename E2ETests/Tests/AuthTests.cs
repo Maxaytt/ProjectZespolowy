@@ -1,3 +1,4 @@
+using E2ETests.Attributes;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Edge;
 using OpenQA.Selenium.Support.UI;
@@ -7,14 +8,14 @@ using Xunit.Priority;
 
 namespace E2ETests.Tests;
 
-[TestCaseOrderer(PriorityOrderer.Name, PriorityOrderer.Assembly)]
+[TestCaseOrderer("E2ETests.Services.PriorityOrderer", "E2ETests")]
 public class AuthTests : IDisposable
 {
     public readonly IWebDriver Driver = new EdgeDriver();
 
     private const string BaseUrl = "http://localhost:5000/";
     
-    [Fact, Priority(0)]
+    [Fact, TestPriority(0)]
     public void Should_RedirectOrConflict_When_Register()
     {
         // Arrange
@@ -49,7 +50,7 @@ public class AuthTests : IDisposable
         }
     }
     
-    [Fact, Priority(1)]
+    [Fact, TestPriority(1)]
     public void Should_Redirect_When_Login()
     {
         // Arrange
@@ -68,7 +69,7 @@ public class AuthTests : IDisposable
         Driver.Url.ShouldBe("http://localhost:5000/Home/Index");
     }
     
-    [Fact, Priority(2)]
+    [Fact, TestPriority(2)]
     public void Should_RedirectToLogin_When_Logout()
     {
         // Arrange

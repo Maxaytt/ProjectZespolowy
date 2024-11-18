@@ -3,7 +3,7 @@
 <h1>Edit Film</h1>
 <form asp-controller="Films" asp-action="EditPost" method="post" enctype="multipart/form-data">
     <label asp-for="Name" id="NameFieldset">Name</label>
-    <input asp-for="Name" />
+    <input id="Name" asp-for="Name" />
     <br />
 
     <input type="checkbox" id="checkboxForVideo" /> <label asp-for="VideoFile">Video File</label>

@@ -1,11 +1,12 @@
-﻿using OpenQA.Selenium;
+﻿using E2ETests.Attributes;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Edge;
 using OpenQA.Selenium.Support.UI;
 using Shouldly;
-using Xunit.Priority;
 
 namespace E2ETests.Tests;
 
+[TestCaseOrderer("E2ETests.Services.PriorityOrderer", "E2ETests")]
 public class FilmTests : IDisposable
 {
     public readonly IWebDriver Driver = new EdgeDriver();
@@ -14,21 +15,21 @@ public class FilmTests : IDisposable
     private const string Email = "testuser@example.com";
     private const string Password = "Qwer1234!";
     private const string FilmTitle = "Test Film";
+    private readonly string _incompleteVideoPath = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "TestVideo.mp4");
+    private readonly string _incompleteImagePath = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "TestImage.jpg");
 
-    [Fact, Priority(0)]
+    [Fact, TestPriority(0)]
     public void Should_AddFilm_When_ValidData()
     {
         // Arrange
-        var incompleteVideoPath = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "TestVideo.mp4");
-        var videoPath = Path.GetFullPath(incompleteVideoPath);
+        var videoPath = Path.GetFullPath(_incompleteVideoPath);
 
         if (!File.Exists(videoPath)) 
         {
             throw new FileNotFoundException($"Film not found: {videoPath}");
         }
-
-        var incompleteImagePath = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "TestImage.jpg");
-        var imagePath = Path.GetFullPath(incompleteImagePath);
+        
+        var imagePath = Path.GetFullPath(_incompleteImagePath);
 
         if (!File.Exists(imagePath)) 
         {
@@ -44,7 +45,7 @@ public class FilmTests : IDisposable
         var wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(10));
         wait.Until(d => d.Url == $"{BaseUrl}Home/Index");
         
-        Driver.Navigate().GoToUrl($"{BaseUrl}Films");
+        Driver.FindElement(By.Id("create-film")).Click();
         
         wait.Until(d => d.FindElement(By.Id("Name")).Displayed);
 
@@ -62,7 +63,7 @@ public class FilmTests : IDisposable
         Driver.FindElement(By.ClassName("film-item")).ShouldNotBeNull();
     }
     
-    [Fact, Priority(1)]
+    [Fact, TestPriority(1)]
     public void Should_UpdateFilm_When_Edit()
     {
         // Arrange
@@ -74,7 +75,7 @@ public class FilmTests : IDisposable
         Driver.FindElement(By.Id("Password")).SendKeys(Password);
         Driver.FindElement(By.CssSelector("button[type='submit']")).Click();
         
-        var firstFilmEditLink = Driver.FindElement(By.CssSelector("a.btn.btn-primary[href*='/Films/Edit']"));
+        var firstFilmEditLink = Driver.FindElement(By.Id("edit-href"));
         firstFilmEditLink.Click();
         
         var nameField = Driver.FindElement(By.Id("Name"));
@@ -88,8 +89,8 @@ public class FilmTests : IDisposable
         updatedFilm.Count.ShouldBe(1, "Updated film with unique name was not found.");
     }
 
-    [Fact, Priority(2)]
-    public void Should_Delete_Film()
+    [Fact, TestPriority(2)]
+    public void Should_DeleteFilm_When_Delete()
     {
         // Arrange
         Login();
@@ -99,7 +100,7 @@ public class FilmTests : IDisposable
         filmRow.ShouldNotBeNull("No films found to delete.");
 
         var filmName = filmRow.FindElement(By.CssSelector(".card .film-name")).Text;
-
+        //Thread.Sleep(5000);
         var deleteButton = filmRow.FindElement(By.CssSelector("#delete-btn"));
         deleteButton.Click();
 
@@ -119,6 +120,37 @@ public class FilmTests : IDisposable
         Driver.FindElement(By.Id("Email")).SendKeys(Email);
         Driver.FindElement(By.Id("Password")).SendKeys(Password);
         Driver.FindElement(By.CssSelector("button[type='submit']")).Click();
+    }
+
+    private void CreateFilm()
+    {
+        var videoPath = Path.GetFullPath(_incompleteVideoPath);
+
+        if (!File.Exists(videoPath)) 
+        {
+            throw new FileNotFoundException($"Film not found: {videoPath}");
+        }
+        
+        var imagePath = Path.GetFullPath(_incompleteImagePath);
+
+        if (!File.Exists(imagePath)) 
+        {
+            throw new FileNotFoundException($"Image not found: {imagePath}");
+        }
+        var wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(10));
+        
+        Driver.FindElement(By.Id("create-film")).Click();
+        
+        wait.Until(d => d.FindElement(By.Id("Name")).Displayed);
+
+        Driver.FindElement(By.Id("Name")).SendKeys(FilmTitle);
+
+        Driver.FindElement(By.Name("VideoFile")).SendKeys(videoPath);
+        Driver.FindElement(By.Name("ImageFile")).SendKeys(imagePath); 
+        
+        Driver.FindElement(By.CssSelector("button[type='submit']")).Click();
+        
+        wait.Until(d => d.Url == $"{BaseUrl}Home/Index");
     }
     
     public void Dispose()

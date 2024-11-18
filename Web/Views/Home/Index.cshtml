@@ -17,7 +17,7 @@
 
                         <h5 id="film-name" class="card-title film-name" style="text-align:center">@film.Name</h5>
                         <div class="card-body">
-                            <a href="/Films/Edit/@film.Id"  class="btn btn-primary">Edit</a>
+                            <a id="edit-href" href="/Films/Edit/@film.Id"  class="btn btn-primary">Edit</a>
                             <a id="delete-btn" class="btn btn-danger" asp-controller="Films" asp-action="Delete" asp-route-id="@film.Id">Delete</a>
                         </div>
                     </div>
