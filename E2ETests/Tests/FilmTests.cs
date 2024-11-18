@@ -19,18 +19,20 @@ public class FilmTests : IDisposable
         const string password = "Qwer1234!";
         const string filmTitle = "Test Film";
        
-        var filmVideoPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Tests", "Assets", "TestVideo.mp4");
+        var incompleteVideoPath = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "TestVideo.mp4");
+        var videoPath = Path.GetFullPath(incompleteVideoPath);
 
-        if (!File.Exists(filmVideoPath)) 
+        if (!File.Exists(videoPath)) 
         {
-            throw new FileNotFoundException($"Film not found: {filmVideoPath}");
+            throw new FileNotFoundException($"Film not found: {videoPath}");
         }
 
-        var filmImagePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Tests", "Assets", "TestImage.png");
+        var incompleteImagePath = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "TestImage.jpg");
+        var imagePath = Path.GetFullPath(incompleteImagePath);
 
-        if (!File.Exists(filmImagePath)) 
+        if (!File.Exists(imagePath)) 
         {
-            throw new FileNotFoundException($"Image not found: {filmImagePath}");
+            throw new FileNotFoundException($"Image not found: {imagePath}");
         }
         
         // Act
@@ -48,8 +50,8 @@ public class FilmTests : IDisposable
 
         Driver.FindElement(By.Id("Name")).SendKeys(filmTitle);
 
-        Driver.FindElement(By.Name("VideoFile")).SendKeys(filmVideoPath);
-        Driver.FindElement(By.Name("ImageFile")).SendKeys(filmImagePath); 
+        Driver.FindElement(By.Name("VideoFile")).SendKeys(videoPath);
+        Driver.FindElement(By.Name("ImageFile")).SendKeys(imagePath); 
         
         Driver.FindElement(By.CssSelector("button[type='submit']")).Click();
         
