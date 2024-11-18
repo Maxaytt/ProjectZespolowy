@@ -5,10 +5,9 @@
 }
     <div class="container-fluid">
         <div class="row">
-
             @foreach (var film in Model)
             {
-                <div class="col mb-4">
+                <div class="col mb-4 film-item">
                     <div class="card shadow-sm" style="width: 320px">
                     <a href="@Url.Action("PlayFilm", "Films", new {id = film.Id})">
                             <img class="card-img-top" 
@@ -23,7 +22,6 @@
                         </div>
                     </div>
                 </div>
-
             }
         </div>
     </div>
