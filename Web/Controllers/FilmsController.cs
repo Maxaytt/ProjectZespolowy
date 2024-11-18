@@ -228,9 +228,8 @@ public class FilmsController : Controller
 
         await _dbContext.Questions.AddAsync(question);
         await _dbContext.SaveChangesAsync();
-
-        // Перенаправление на страницу вопросов для текущего фильма
-        return RedirectToAction("Questions", new { filmId = filmId });
+        
+        return RedirectToAction("Questions", new { filmId });
     }
 
     [HttpGet("Film/{filmId:guid}/Questions")]
@@ -240,7 +239,7 @@ public class FilmsController : Controller
             .Include(f => f.Questions)
             .FirstOrDefault(f => f.Id == filmId);
 
-        if (film == null)
+        if (film is null)
         {
             return NotFound();
         }
@@ -253,7 +252,7 @@ public class FilmsController : Controller
             FilmName = film.Name,
             Questions = film.Questions
                 .AsEnumerable()
-                .OrderBy(q => random.Next())
+                .OrderBy(_ => random.Next())
                 .ToList()
         };
 
