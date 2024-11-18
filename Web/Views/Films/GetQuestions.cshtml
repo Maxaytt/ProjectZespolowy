@@ -10,12 +10,12 @@
 <div>
     @if (Model.Questions.Any())
     {
-        <ol>
+        <ol class="list-group list-group-numbered">
             @foreach (var question in Model.Questions)
             {
-            <li class="rounded p-3 mb-3 bg-light d-flex justify-content-between align-items-center border">
-                <span>@question.Text</span>
-            </li>
+                <li class="list-group-item d-flex align-items-center">
+                    <span>@question.Text</span>
+                </li>
             }
         </ol>
     }
