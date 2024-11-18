@@ -253,6 +253,7 @@ public class FilmsController : Controller
             Questions = film.Questions
                 .AsEnumerable()
                 .OrderBy(_ => random.Next())
+                .Take(film.QuestionsNumber)
                 .ToList()
         };
 
