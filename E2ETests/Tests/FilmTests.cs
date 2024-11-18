@@ -10,6 +10,7 @@ public class FilmTests : IDisposable
 {
     public readonly IWebDriver Driver = new EdgeDriver();
     private const string BaseUrl = "http://localhost:5000/";
+    private const string LoginUrl = "http://localhost:5000/Auth/Login";
     private const string Email = "testuser@example.com";
     private const string Password = "Qwer1234!";
     private const string FilmTitle = "Test Film";
@@ -87,6 +88,39 @@ public class FilmTests : IDisposable
         updatedFilm.Count.ShouldBe(1, "Updated film with unique name was not found.");
     }
 
+    [Fact, Priority(2)]
+    public void Should_Delete_Film()
+    {
+        // Arrange
+        Login();
+
+        // Act
+        var filmRow = Driver.FindElements(By.CssSelector(".film-item")).FirstOrDefault();
+        filmRow.ShouldNotBeNull("No films found to delete.");
+
+        var filmName = filmRow.FindElement(By.CssSelector(".card .film-name")).Text;
+
+        var deleteButton = filmRow.FindElement(By.CssSelector("#delete-btn"));
+        deleteButton.Click();
+
+        // Assert
+        var filmsList = Driver.FindElements(By.CssSelector("#film-list"));
+        var isFilmDeleted = filmsList.All(element => 
+            element.FindElements(By.CssSelector(".film-name")).Count == 0 ||
+            element.FindElement(By.CssSelector(".film-name")).Text != filmName);
+
+        isFilmDeleted.ShouldBeTrue("The film was not removed from the list.");
+    }
+
+    private void Login()
+    {
+        Driver.Navigate().GoToUrl(LoginUrl);
+
+        Driver.FindElement(By.Id("Email")).SendKeys(Email);
+        Driver.FindElement(By.Id("Password")).SendKeys(Password);
+        Driver.FindElement(By.CssSelector("button[type='submit']")).Click();
+    }
+    
     public void Dispose()
     {
         Driver.Quit();
