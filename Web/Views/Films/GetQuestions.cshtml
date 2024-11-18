@@ -5,19 +5,19 @@
 }
 
 <h1>@Model.FilmName</h1>
-<h2>Test</h2>
+<h2 class="ps-3">Test</h2>
 
 <div>
-    @if (Model.Questions != null && Model.Questions.Any())
+    @if (Model.Questions.Any())
     {
-        int questionNumber = 1;
-        foreach (var question in Model.Questions)
-        {
-                <div style="margin-bottom: 15px;">
-                    <strong>@questionNumber.</strong> @question.Text
-                </div>
-                questionNumber++;
-        }
+        <ol>
+            @foreach (var question in Model.Questions)
+            {
+            <li class="rounded p-3 mb-3 bg-light d-flex justify-content-between align-items-center border">
+                <span>@question.Text</span>
+            </li>
+            }
+        </ol>
     }
     else
     {
