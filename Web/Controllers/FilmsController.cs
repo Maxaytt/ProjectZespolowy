@@ -229,11 +229,11 @@ public class FilmsController : Controller
         await _dbContext.Questions.AddAsync(question);
         await _dbContext.SaveChangesAsync();
         
-        return RedirectToAction("Questions", new { filmId });
+        return RedirectToAction("GetQuestions", new { filmId });
     }
 
     [HttpGet("Film/{filmId:guid}/Questions")]
-    public IActionResult Questions(Guid filmId)
+    public IActionResult GetQuestions(Guid filmId)
     {
         var film = _dbContext.Films
             .Include(f => f.Questions)
