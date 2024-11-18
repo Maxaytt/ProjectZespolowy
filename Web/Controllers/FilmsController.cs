@@ -27,14 +27,14 @@ public class FilmsController : Controller
     }
 
 
-    [HttpGet]
+    [HttpGet("Create")]
     public IActionResult Create()
     {
         return View();
     }
 
 
-    [HttpPost]
+    [HttpPost("Create")]
     public IActionResult Create(CreateEditFilmVm film)
     {
         var imageForDatabse = new Image
@@ -126,8 +126,6 @@ public class FilmsController : Controller
         return RedirectToAction("Index", "Home");
     }
 
-
-
     [HttpGet("Delete")]
     public IActionResult Delete(Guid id)
     {
@@ -208,7 +206,7 @@ public class FilmsController : Controller
         await _dbContext.Questions.AddAsync(question);
         await _dbContext.SaveChangesAsync();
         
-        return RedirectToAction("GetQuestions", new { filmId });
+        return RedirectToAction("Edit", new { id = filmId});
     }
 
     [HttpGet("Film/{filmId:guid}/Questions")]
