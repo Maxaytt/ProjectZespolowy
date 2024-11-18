@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Domain.Models;
 using Domain.ViewModel;
 using Microsoft.EntityFrameworkCore;
-using System;
 
 namespace Web.Controllers;
 
@@ -86,61 +85,41 @@ public class FilmsController : Controller
         {
             Id = id,
             Name = film.Name,
-            Questions = film.Questions
+            Questions = film.Questions,
+            QuestionsNumber = film.QuestionsNumber
         };
         return View(viewModel);
     }
-
-
-    [HttpPost("EditAndAdd")]
-    public IActionResult EditAndAdd(CreateEditFilmVm ViewModel)
+    
+    [HttpPost("Edit")]
+    public IActionResult EditPost(CreateEditFilmVm viewModel)
     {
         var existingFilm = _dbContext.Films
             .Include(f => f.Image)
             .Include(f => f.Questions)
-            .First(f => f.Id == ViewModel.Id);
+            .First(f => f.Id == viewModel.Id);
 
-        if (ViewModel.Name is not null)
+        if (viewModel.Name is not null)
         {
-            existingFilm.Name = ViewModel.Name;
-            existingFilm.Image.Caption = ViewModel.Name;
+            existingFilm.Name = viewModel.Name;
+            existingFilm.Image.Caption = viewModel.Name;
         }
 
-        if (ViewModel.ImageFile is not null)
+        if (viewModel.ImageFile is not null)
         {
             using var item = new MemoryStream();
-            ViewModel.ImageFile.CopyTo(item);
+            viewModel.ImageFile.CopyTo(item);
             existingFilm.Image.Content = item.ToArray();
         }
 
-        if (ViewModel.VideoFile is not null)
+        if (viewModel.VideoFile is not null)
         {
             using var item = new MemoryStream();
-            ViewModel.VideoFile.CopyTo(item);
+            viewModel.VideoFile.CopyTo(item);
             existingFilm.Content = item.ToArray();
         }
 
-        if (ViewModel.NumberOfQuestions >= 0)
-        {
-            foreach (var question in existingFilm.Questions)
-            {
-                question.IsIncludedInTest = false;
-            }
-
-            var random = new Random();
-
-            var questionsToInclude = existingFilm.Questions
-                .AsEnumerable()
-                .OrderBy(q => random.Next())
-                .Take(ViewModel.NumberOfQuestions)
-                .ToList();
-
-            foreach (var question in questionsToInclude)
-            {
-                question.IsIncludedInTest = true;
-            }
-        }
-
+        existingFilm.QuestionsNumber = viewModel.QuestionsNumber;
         _dbContext.Films.Update(existingFilm);
         _dbContext.SaveChanges();
 
