@@ -28,10 +28,17 @@
     <button type="submit" class="btn btn-primary">Edit</button>
 </form>
 
-<h1>Questions</h1>
+<br/>
+<h2>Questions</h2>
 <div id="question-list">
+    @foreach (var question in Model.Questions)
+    {
+    <div class="rounded p-3 mb-3 bg-light d-flex justify-content-between align-items-center border">
+        <a class="btn btn-danger" asp-action="DeleteQuestion" asp-route-id="@question.Id">Delete</a>
+    </div>
+    }
     <form asp-action="AddQuestion" method="get" class="mt-4 d-flex">
-        <input type="hidden" name="filmId" value="@Model.Id" />
+        <input type="hidden" name="filmId" value="@Model.Id"/>
         <input type="text" id="questionText" name="text" class="form-control me-2" placeholder="Add Question" required/>
         <button type="submit" class="btn btn-primary">Add</button>
     </form>
