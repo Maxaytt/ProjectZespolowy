@@ -13,7 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{89F34C97-51A
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{07950F2D-930D-4309-93BB-925A367E689E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "E2ETests", "IntegrationTests\E2ETests.csproj", "{04DF6FBC-83CE-4816-8100-D3787D6E2E9C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "E2ETests", "E2ETests\E2ETests.csproj", "{04DF6FBC-83CE-4816-8100-D3787D6E2E9C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
