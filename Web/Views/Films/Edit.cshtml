@@ -1,9 +1,9 @@
 ﻿@model Domain.ViewModel.CreateEditFilmVm
 
 <h1>Edit Film</h1>
-<form asp-action="EditAndAdd" asp-controller="Films" method="post" enctype="multipart/form-data">
+<form asp-controller="Films" asp-action="EditPost" method="post" enctype="multipart/form-data">
     <label asp-for="Name" id="NameFieldset">Name</label>
-    <input asp-for="Name" />
+    <input id="Name" asp-for="Name" />
     <br />
 
     <input type="checkbox" id="checkboxForVideo" /> <label asp-for="VideoFile">Video File</label>
@@ -18,21 +18,28 @@
     </fieldset>
     <br />
 
+    <div class="form-group">
+        <label asp-for="QuestionsNumber">number questions in test</label>
+        <input asp-for="QuestionsNumber" type="number" class="form-control" min="0" max="@Model.Questions.Count" />
+    </div>
+    <br />
+
     <input asp-for="Id" hidden />
     <button type="submit" class="btn btn-primary">Edit</button>
 </form>
 
-<h1>Questions</h1>
+<br/>
+<h2>Questions</h2>
 <div id="question-list">
     @foreach (var question in Model.Questions)
     {
-    <div class="rounded p-3 mb-3 bg-light d-flex justify-content-between align-items-center border">
-        <span>@question.Text</span>
-        <a class="btn btn-danger" asp-action="DeleteQuestion" asp-route-id="@question.Id">Delete</a>
-    </div>
+        <div class="rounded p-3 mb-3 bg-light d-flex justify-content-between align-items-center border">
+            <span>@question.Text</span>
+            <a class="btn btn-danger" asp-action="DeleteQuestion" asp-route-id="@question.Id">Delete</a>
+        </div>
     }
     <form asp-action="AddQuestion" method="get" class="mt-4 d-flex">
-        <input type="hidden" name="filmId" value="@Model.Id" />
+        <input type="hidden" name="filmId" value="@Model.Id"/>
         <input type="text" id="questionText" name="text" class="form-control me-2" placeholder="Add Question" required/>
         <button type="submit" class="btn btn-primary">Add</button>
     </form>
