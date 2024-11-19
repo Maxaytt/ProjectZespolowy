@@ -21,41 +21,34 @@ public class ProfileTests : IDisposable
         const string password = "Qwer1234!";
         
         // Act
-        Driver.Navigate().GoToUrl("http://localhost:5000/");
+        Driver.Navigate().GoToUrl(BaseUrl);
         
         Driver.FindElement(By.Id("Email")).SendKeys(email);
         Driver.FindElement(By.Id("Password")).SendKeys(password);
         
         Driver.FindElement(By.CssSelector("button[type='submit']")).Click();
-        Driver.FindElement(By.Id("profilrButton")).Click();
+        Driver.FindElement(By.Id("profileButton")).Click();
         Driver.FindElement(By.Id("editButton")).Click();
+
+        Driver.Url.ShouldBe("http://localhost:5000/Profile/Edit");
        
-       var input1 = Driver.FindElement(By.Id("firstName"));
-       var input2 = Driver.FindElement(By.Id("lastName"));
-       var input3 = Driver.FindElement(By.Id("email"));
+       var input_name = Driver.FindElement(By.Id("firstName"));
+       var input_lastname = Driver.FindElement(By.Id("lastName"));
+       var input_email = Driver.FindElement(By.Id("email"));
 
-       input1.Clear();
-       input1.SendKeys("Alex");
+       input_name.Clear();
+       input_name.SendKeys("Alex");
 
-       input2.Clear();
-       input2.SendKeys("Fox");
+       input_lastname.Clear();
+       input_lastname.SendKeys("Fox");
 
-       input3.Clear();
-       input3.SendKeys("AlexFox@gmail.com");
+       input_email.Clear();
+       input_email.SendKeys("AlexFox@gmail.com");
 
        Driver.FindElement(By.CssSelector("button[type='submit']")).Click();
 
-       var successMessage = Driver.FindElement(By.Id("successMessage")); // Замените ID на актуальный
-                if (successMessage.Text.Contains("Changes saved successfully"))
-                {
-                    Console.WriteLine("Test Passed: Changes saved successfully.");
-                }
-                else
-                {
-                    Console.WriteLine("Test Failed: Changes were not saved.");
-                }
-
-         Dispose();       
+      
+       Driver.Url.ShouldBe("http://localhost:5000/Profile/Index");     
     }
         
    
