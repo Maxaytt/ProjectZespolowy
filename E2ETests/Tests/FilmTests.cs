@@ -100,7 +100,6 @@ public class FilmTests : IDisposable
         filmRow.ShouldNotBeNull("No films found to delete.");
 
         var filmName = filmRow.FindElement(By.CssSelector(".card .film-name")).Text;
-        //Thread.Sleep(5000);
         var deleteButton = filmRow.FindElement(By.CssSelector("#delete-btn"));
         deleteButton.Click();
 
