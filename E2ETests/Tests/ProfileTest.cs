@@ -1,11 +1,9 @@
 using OpenQA.Selenium;
 using OpenQA.Selenium.Edge;
-using OpenQA.Selenium.Support.UI;
-using SeleniumExtras.WaitHelpers;
 using Shouldly;
 using Xunit.Priority;
 
-namespace IntegrationTests.Tests;
+namespace E2ETests.Tests;
 
 public class ProfileTests : IDisposable
 {
@@ -42,8 +40,8 @@ public class ProfileTests : IDisposable
        input_lastname.Clear();
        input_lastname.SendKeys("Fox");
 
-       input_email.Clear();
-       input_email.SendKeys("AlexFox@gmail.com");
+       inputEmail.Clear();
+       inputEmail.SendKeys("AlexFox@gmail.com");
 
        Driver.FindElement(By.CssSelector("button[type='submit']")).Click();
 
