@@ -30,15 +30,15 @@ public class ProfileTests : IDisposable
 
         Driver.Url.ShouldBe("http://localhost:5000/Profile/Edit");
        
-       var input_name = Driver.FindElement(By.Id("firstName"));
-       var input_lastname = Driver.FindElement(By.Id("lastName"));
-       var input_email = Driver.FindElement(By.Id("email"));
+       var inputName = Driver.FindElement(By.Id("firstName"));
+       var inputLastname = Driver.FindElement(By.Id("lastName"));
+       var inputEmail = Driver.FindElement(By.Id("email"));
 
-       input_name.Clear();
-       input_name.SendKeys("Alex");
+       inputName.Clear();
+       inputName.SendKeys("Alex");
 
-       input_lastname.Clear();
-       input_lastname.SendKeys("Fox");
+       inputLastname.Clear();
+       inputLastname.SendKeys("Fox");
 
        inputEmail.Clear();
        inputEmail.SendKeys("AlexFox@gmail.com");
