@@ -237,4 +237,75 @@ public class FilmsController : Controller
         return View(viewModel);
     }
 
+    [HttpGet("AddAnswer")]
+    public IActionResult AddAnswer(Guid questionId)
+    {
+        var question = _dbContext.Questions
+            .Include(q => q.Answers)
+            .Include(q => q.Film)
+            .FirstOrDefault(q => q.Id == questionId);
+
+        if (question == null)
+            return NotFound("Question not found");
+
+        var viewModel = new AddAnswerVm
+        {
+            QuestionId = questionId,
+            QuestionText = question.Text,
+            
+            Answers = question.Answers
+                .Select(a => (a.Id, a.Text, a.IsTrue))
+                .ToList()
+        };
+
+        ViewData["FilmId"] = question.FilmId;
+
+        return View(viewModel);
+    }
+
+
+
+    [HttpPost("AddAnswer")]
+    [ValidateAntiForgeryToken]
+    public IActionResult AddAnswer(AddAnswerVm viewModel)
+    {
+        if (!ModelState.IsValid)
+            return View(viewModel);
+
+        if (viewModel.IsTrue)
+        {
+            var existingAnswers = _dbContext.Answers.Where(a => a.QuestionId == viewModel.QuestionId).ToList();
+            foreach (var answer in existingAnswers)
+            {
+                answer.IsTrue = false;
+            }
+            _dbContext.Answers.UpdateRange(existingAnswers);
+        }
+
+        var newAnswer = new Answer
+        {
+            Id = Guid.NewGuid(),
+            QuestionId = viewModel.QuestionId,
+            Text = viewModel.Text,
+            IsTrue = viewModel.IsTrue
+        };
+
+        _dbContext.Answers.Add(newAnswer);
+        _dbContext.SaveChanges();
+
+        return RedirectToAction("AddAnswer", new { questionId = viewModel.QuestionId });
+    }
+
+    [HttpPost("DeleteAnswer")]
+    public IActionResult DeleteAnswer(Guid id, Guid questionId)
+    {
+        var answer = _dbContext.Answers.Find(id);
+        if (answer == null)
+            return NotFound();
+
+        _dbContext.Answers.Remove(answer);
+        _dbContext.SaveChanges();
+
+        return RedirectToAction("AddAnswer", new { questionId = questionId });
+    }
 }

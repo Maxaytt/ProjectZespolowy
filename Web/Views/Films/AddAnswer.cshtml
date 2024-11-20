@@ -1,0 +1,61 @@
+﻿@model Domain.ViewModel.AddAnswerVm
+
+<h1>Add Answer</h1>
+
+
+<form asp-action="AddAnswer" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="QuestionId" />
+
+    <div class="mb-3">
+        <label asp-for="QuestionText" class="form-label">Question</label>
+        <input asp-for="QuestionText" class="form-control" readonly />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Text" class="form-label">Answer Text</label>
+        <input asp-for="Text" class="form-control" required />
+    </div>
+
+    <div class="mb-3 form-check">
+        <input type="checkbox" asp-for="IsTrue" class="form-check-input" />
+        <label asp-for="IsTrue" class="form-check-label">Is Correct Answer</label>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save</button>
+
+    <a class="btn btn-secondary"
+       asp-action="Edit"
+       asp-controller="Films"
+       asp-route-id="@ViewData["FilmId"]">Cancel</a>
+</form>
+
+<hr />
+
+
+<h2>Existing Answers</h2>
+@if (Model.Answers.Any())
+{
+    <ul class="list-group">
+        @foreach (var answer in Model.Answers)
+        {
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span>@answer.Text</span>
+                <span class="badge @(answer.IsTrue ? "bg-success" : "bg-secondary")">
+                    @(answer.IsTrue ? "Correct" : "Incorrect")
+                </span>
+
+                <form asp-action="DeleteAnswer" method="post" class="d-inline">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="id" value="@answer.Id" />
+                    <input type="hidden" name="questionId" value="@Model.QuestionId" />
+                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                </form>
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>No answers added yet.</p>
+}
