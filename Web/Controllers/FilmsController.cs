@@ -27,14 +27,14 @@ public class FilmsController : Controller
     }
 
 
-    [HttpGet]
+    [HttpGet("Create")]
     public IActionResult Create()
     {
         return View();
     }
 
 
-    [HttpPost]
+    [HttpPost("Create")]
     public IActionResult Create(CreateEditFilmVm film)
     {
         var imageForDatabse = new Image
@@ -85,40 +85,44 @@ public class FilmsController : Controller
         {
             Id = id,
             Name = film.Name,
-            Questions = film.Questions
+            Questions = film.Questions,
+            QuestionsNumber = film.QuestionsNumber
         };
         return View(viewModel);
     }
-
-
-    [HttpPost("EditAndAdd")]
-    public IActionResult EditAndAdd(CreateEditFilmVm ViewModel)
+    
+    [HttpPost("Edit")]
+    public IActionResult EditPost(CreateEditFilmVm viewModel)
     {
         var existingFilm = _dbContext.Films
             .Include(f => f.Image)
-            .First(f => f.Id == ViewModel.Id);
+            .Include(f => f.Questions)
+            .First(f => f.Id == viewModel.Id);
 
-        if (ViewModel.Name is not null)
+        if (viewModel.Name is not null)
         {
-            existingFilm.Name = ViewModel.Name;
-            existingFilm.Image.Caption = ViewModel.Name;
+            existingFilm.Name = viewModel.Name;
+            existingFilm.Image.Caption = viewModel.Name;
         }
 
-        if (ViewModel.ImageFile is not null)
+        if (viewModel.ImageFile is not null)
         {
             using var item = new MemoryStream();
-            ViewModel.ImageFile.CopyTo(item);
+            viewModel.ImageFile.CopyTo(item);
             existingFilm.Image.Content = item.ToArray();
         }
 
-        if (ViewModel.VideoFile is not null)
+        if (viewModel.VideoFile is not null)
         {
             using var item = new MemoryStream();
-            ViewModel.VideoFile.CopyTo(item);
+            viewModel.VideoFile.CopyTo(item);
             existingFilm.Content = item.ToArray();
         }
+
+        existingFilm.QuestionsNumber = viewModel.QuestionsNumber;
         _dbContext.Films.Update(existingFilm);
         _dbContext.SaveChanges();
+
         return RedirectToAction("Index", "Home");
     }
 
@@ -201,8 +205,36 @@ public class FilmsController : Controller
 
         await _dbContext.Questions.AddAsync(question);
         await _dbContext.SaveChangesAsync();
+        
+        return RedirectToAction("Edit", new { id = filmId});
+    }
 
-        return RedirectToAction(nameof(Edit), new { id = filmId });
+    [HttpGet("Film/{filmId:guid}/Questions")]
+    public IActionResult GetQuestions(Guid filmId)
+    {
+        var film = _dbContext.Films
+            .Include(f => f.Questions)
+            .FirstOrDefault(f => f.Id == filmId);
+
+        if (film is null)
+        {
+            return NotFound();
+        }
+
+        var random = new Random();
+
+        var viewModel = new FilmQuestionsVm
+        {
+            FilmId = film.Id,
+            FilmName = film.Name,
+            Questions = film.Questions
+                .AsEnumerable()
+                .OrderBy(_ => random.Next())
+                .Take(film.QuestionsNumber)
+                .ToList()
+        };
+
+        return View(viewModel);
     }
 
     [HttpGet("AddAnswer")]
@@ -276,5 +308,4 @@ public class FilmsController : Controller
 
         return RedirectToAction("AddAnswer", new { questionId = questionId });
     }
-
 }

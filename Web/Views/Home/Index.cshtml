@@ -4,26 +4,24 @@
     ViewBag.Title = "Create Film";
 }
     <div class="container-fluid">
-        <div class="row">
-
+        <div id="film-list" class="row">
             @foreach (var film in Model)
             {
-                <div class="col mb-4">
+                <div class="col mb-4 film-item">
                     <div class="card shadow-sm" style="width: 320px">
-                    <a href="@Url.Action("PlayFilm", "Films", new {id = film.Id})">
+                        <a href="@Url.Action("PlayFilm", "Films", new {id = film.Id})">
                             <img class="card-img-top" 
                             src="@Url.Action("GetImageAsResource", "Films", new {id=film.ImageId})" alt="@film.Name"
                             height="180">
-                    </a>
+                        </a>
 
-                    <h5 class="card-title" style="text-align:center">@film.Name</h5>
+                        <h5 id="film-name" class="card-title film-name" style="text-align:center">@film.Name</h5>
                         <div class="card-body">
-                            <a href="/Films/Edit/@film.Id"  class="btn btn-primary">Edit</a>
-                            <a class="btn btn-danger" asp-controller="Films" asp-action="Delete" asp-route-id="@film.Id">Delete</a>
+                            <a id="edit-href" href="/Films/Edit/@film.Id"  class="btn btn-primary">Edit</a>
+                            <a id="delete-btn" class="btn btn-danger" asp-controller="Films" asp-action="Delete" asp-route-id="@film.Id">Delete</a>
                         </div>
                     </div>
                 </div>
-
             }
         </div>
     </div>

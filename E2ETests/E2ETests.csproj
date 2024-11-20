@@ -31,7 +31,11 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Remove="Attributes\TestSetupAttribute.cs" />
+        <None Update="Assets\TestVideo.mp4">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\TestImage.jpg">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
-
 </Project>

@@ -1,0 +1,31 @@
+﻿@model Domain.ViewModel.FilmQuestionsVm
+
+@{
+    ViewData["Title"] = "Film questions";
+}
+
+<h1>@Model.FilmName</h1>
+<h2 class="ps-3">Test</h2>
+
+<div>
+    @if (Model.Questions.Any())
+    {
+        <ol class="list-group list-group-numbered">
+            @foreach (var question in Model.Questions)
+            {
+                <li class="list-group-item d-flex align-items-center">
+                    <span>@question.Text</span>
+                </li>
+            }
+        </ol>
+    }
+    else
+    {
+        <p>No questions.</p>
+    }
+</div>
+
+<div style="margin-top: 20px;">
+    <a href="@Url.Action("Index", "Home")" class="btn btn-success">Finish</a>
+</div>
+

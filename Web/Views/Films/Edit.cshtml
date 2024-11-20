@@ -1,9 +1,9 @@
 ﻿@model Domain.ViewModel.CreateEditFilmVm
 
 <h1>Edit Film</h1>
-<form asp-action="EditAndAdd" asp-controller="Films" method="post" enctype="multipart/form-data">
+<form asp-controller="Films" asp-action="EditPost" method="post" enctype="multipart/form-data">
     <label asp-for="Name" id="NameFieldset">Name</label>
-    <input asp-for="Name" />
+    <input id="Name" asp-for="Name" />
     <br />
 
     <input type="checkbox" id="checkboxForVideo" /> <label asp-for="VideoFile">Video File</label>
@@ -18,9 +18,16 @@
     </fieldset>
     <br />
 
+    <div class="form-group">
+        <label asp-for="QuestionsNumber">number questions in test</label>
+        <input asp-for="QuestionsNumber" type="number" class="form-control" min="0" max="@Model.Questions.Count" />
+    </div>
+    <br />
+
     <input asp-for="Id" hidden />
     <button type="submit" class="btn btn-primary">Edit</button>
 </form>
+<br/>
 
 <h2>Questions</h2>
 <div id="question-list">
@@ -28,7 +35,6 @@
     {
         <div class="rounded p-3 mb-3 bg-light d-flex justify-content-between align-items-center border">
             <span>@question.Text</span>
-
             <div class="d-flex">
                 <a class="btn btn-success me-2"
                    asp-action="AddAnswer"

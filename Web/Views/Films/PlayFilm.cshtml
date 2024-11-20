@@ -1,5 +1,14 @@
 ﻿@model Domain.ViewModel.PlayFilmVm
 <h1>@Model.Name</h1>
-<video controls width="800" height="450">
-    <source src="@Url.Action("GetFilmAsResource", "Films", new {id = Model.Id})" type="@Model.ContentType" />
-</video>
+<div>
+    <video controls width="800" height="450">
+        <source src="@Url.Action("GetFilmAsResource", "Films", new { id = Model.Id })" type="@Model.ContentType" />
+    </video>
+</div>
+
+<div style="margin-top: 20px;">
+    <a href="@Url.Action("GetQuestions", "Films", new { filmId = Model.Id })" class="btn btn-primary">
+        Questions
+    </a>
+</div>
+
