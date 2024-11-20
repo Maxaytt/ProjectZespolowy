@@ -120,37 +120,6 @@ public class FilmTests : IDisposable
         Driver.FindElement(By.Id("Password")).SendKeys(Password);
         Driver.FindElement(By.CssSelector("button[type='submit']")).Click();
     }
-
-    private void CreateFilm()
-    {
-        var videoPath = Path.GetFullPath(_incompleteVideoPath);
-
-        if (!File.Exists(videoPath)) 
-        {
-            throw new FileNotFoundException($"Film not found: {videoPath}");
-        }
-        
-        var imagePath = Path.GetFullPath(_incompleteImagePath);
-
-        if (!File.Exists(imagePath)) 
-        {
-            throw new FileNotFoundException($"Image not found: {imagePath}");
-        }
-        var wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(10));
-        
-        Driver.FindElement(By.Id("create-film")).Click();
-        
-        wait.Until(d => d.FindElement(By.Id("Name")).Displayed);
-
-        Driver.FindElement(By.Id("Name")).SendKeys(FilmTitle);
-
-        Driver.FindElement(By.Name("VideoFile")).SendKeys(videoPath);
-        Driver.FindElement(By.Name("ImageFile")).SendKeys(imagePath); 
-        
-        Driver.FindElement(By.CssSelector("button[type='submit']")).Click();
-        
-        wait.Until(d => d.Url == $"{BaseUrl}Home/Index");
-    }
     
     public void Dispose()
     {
