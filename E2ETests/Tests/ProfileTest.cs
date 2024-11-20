@@ -12,7 +12,7 @@ public class ProfileTests : IDisposable
     private const string BaseUrl = "http://localhost:5000/";
     
    [Fact, Priority(0)]
-    public void Should_RedirectToLogin_When_EditProfile()
+    public void Should_UpdateUser_When_EditProfile()
     {   
         // Arrange
         const string email = "testuser@example.com";
@@ -44,7 +44,6 @@ public class ProfileTests : IDisposable
        inputEmail.SendKeys("AlexFox@gmail.com");
 
        Driver.FindElement(By.CssSelector("button[type='submit']")).Click();
-
       
        Driver.Url.ShouldBe("http://localhost:5000/Profile/Index");     
     }
