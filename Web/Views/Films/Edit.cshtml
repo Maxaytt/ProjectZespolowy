@@ -1,4 +1,4 @@
-﻿@model Domain.ViewModel.CreateEditFilmVm
+﻿@model Domain.ViewModels.CreateEditFilmVm
 
 <h1>Edit Film</h1>
 <form asp-controller="Films" asp-action="EditPost" method="post" enctype="multipart/form-data">
@@ -51,7 +51,7 @@
 <form asp-action="AddQuestion" method="get" class="mt-4 d-flex">
     <input type="hidden" name="filmId" value="@Model.Id" />
     <input type="text" id="questionText" name="text" class="form-control me-2" placeholder="Add Question" required />
-    <button type="submit" class="btn btn-primary">Add</button>
+    <button id="question-btn" type="submit" class="btn btn-primary">Add</button>
 </form>
 
 <script src="~/js/EditFilm.js"></script>

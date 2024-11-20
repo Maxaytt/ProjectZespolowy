@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Domain.ViewModels;
+﻿namespace Domain.ViewModels;
 
 public class RegisterViewModel
 {

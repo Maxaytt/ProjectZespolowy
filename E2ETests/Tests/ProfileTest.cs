@@ -1,11 +1,9 @@
 using OpenQA.Selenium;
 using OpenQA.Selenium.Edge;
-using OpenQA.Selenium.Support.UI;
-using SeleniumExtras.WaitHelpers;
 using Shouldly;
 using Xunit.Priority;
 
-namespace IntegrationTests.Tests;
+namespace E2ETests.Tests;
 
 public class ProfileTests : IDisposable
 {
@@ -14,7 +12,7 @@ public class ProfileTests : IDisposable
     private const string BaseUrl = "http://localhost:5000/";
     
    [Fact, Priority(0)]
-    public void Should_RedirectToLogin_When_EditProfile()
+    public void Should_UpdateUser_When_EditProfile()
     {   
         // Arrange
         const string email = "testuser@example.com";
@@ -32,21 +30,20 @@ public class ProfileTests : IDisposable
 
         Driver.Url.ShouldBe("http://localhost:5000/Profile/Edit");
        
-       var input_name = Driver.FindElement(By.Id("firstName"));
-       var input_lastname = Driver.FindElement(By.Id("lastName"));
-       var input_email = Driver.FindElement(By.Id("email"));
+       var inputName = Driver.FindElement(By.Id("firstName"));
+       var inputLastname = Driver.FindElement(By.Id("lastName"));
+       var inputEmail = Driver.FindElement(By.Id("email"));
 
-       input_name.Clear();
-       input_name.SendKeys("Alex");
+       inputName.Clear();
+       inputName.SendKeys("Alex");
 
-       input_lastname.Clear();
-       input_lastname.SendKeys("Fox");
+       inputLastname.Clear();
+       inputLastname.SendKeys("Fox");
 
-       input_email.Clear();
-       input_email.SendKeys("AlexFox@gmail.com");
+       inputEmail.Clear();
+       inputEmail.SendKeys("AlexFox@gmail.com");
 
        Driver.FindElement(By.CssSelector("button[type='submit']")).Click();
-
       
        Driver.Url.ShouldBe("http://localhost:5000/Profile/Index");     
     }
