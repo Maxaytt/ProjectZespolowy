@@ -210,7 +210,7 @@ public class FilmsController : Controller
     {
         var question = _dbContext.Questions
             .Include(q => q.Answers)
-            .Include(q => q.Film) 
+            .Include(q => q.Film)
             .FirstOrDefault(q => q.Id == questionId);
 
         if (question == null)
@@ -220,18 +220,17 @@ public class FilmsController : Controller
         {
             QuestionId = questionId,
             QuestionText = question.Text,
-            Answers = question.Answers.Select(a => new AnswerVm
-            {
-                Id = a.Id,
-                Text = a.Text,
-                IsTrue = a.IsTrue
-            }).ToList()
+            
+            Answers = question.Answers
+                .Select(a => (a.Id, a.Text, a.IsTrue))
+                .ToList()
         };
 
         ViewData["FilmId"] = question.FilmId;
 
         return View(viewModel);
     }
+
 
 
     [HttpPost("AddAnswer")]
