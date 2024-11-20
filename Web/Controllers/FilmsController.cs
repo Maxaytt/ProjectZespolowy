@@ -1,7 +1,7 @@
 ﻿using Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Domain.Models;
-using Domain.ViewModel;
+using Domain.ViewModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace Web.Controllers;
@@ -262,9 +262,7 @@ public class FilmsController : Controller
 
         return View(viewModel);
     }
-
-
-
+    
     [HttpPost("AddAnswer")]
     [ValidateAntiForgeryToken]
     public IActionResult AddAnswer(AddAnswerVm viewModel)

@@ -1,4 +1,4 @@
-﻿namespace Domain.ViewModel;
+﻿namespace Domain.ViewModels;
 
 public class FilmVm
 {

@@ -1,7 +1,7 @@
 ﻿using Domain.Models;
 using Microsoft.AspNetCore.Http;
 
-namespace Domain.ViewModel;
+namespace Domain.ViewModels;
 
 public class CreateEditFilmVm
 {
