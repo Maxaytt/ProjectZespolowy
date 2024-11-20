@@ -39,19 +39,6 @@
                    asp-route-id="@question.Id">Delete</a>
             </div>
         </div>
-
-
-        <div class="ms-4">
-            @foreach (var answer in question.Answers)
-            {
-                <div class="d-flex justify-content-between">
-                    <span>@answer.Text</span>
-                    <span class="badge @(answer.IsTrue ? "badge-success" : "badge-secondary")">
-                        @(answer.IsTrue ? "Correct" : "Incorrect")
-                    </span>
-                </div>
-            }
-        </div>
     }
 </div>
 
