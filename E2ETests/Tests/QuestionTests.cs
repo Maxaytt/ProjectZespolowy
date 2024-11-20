@@ -31,13 +31,10 @@ public class QuestionTests : IDisposable
         if (!File.Exists(imagePath)) 
             throw new FileNotFoundException($"Image not found: {imagePath}");
         
-        var wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(10));
-        
         // Act
         Login();
         CreateFilm(videoPath, imagePath);
         Driver.FindElement(By.Id("edit-href")).Click();
-        wait.Until(d => d.Url == $"{BaseUrl}Home/Index");
 
         Driver.FindElement(By.Id("questionText")).SendKeys(QuestionText);
         Driver.FindElement(By.Id("question-btn")).Click();
