@@ -42,10 +42,6 @@ public void Should_AddAnswer_When_ValidData()
 
     var questionElements = Driver.FindElements(By.CssSelector(".rounded.p-3.mb-3.bg-light"));
     var question = questionElements.FirstOrDefault(q => q.Text.Contains(QuestionText));
-    if (question == null)
-    {
-        throw new NoSuchElementException($"The question '{QuestionText}' was not found in the list.");
-    }
 
     var addAnswerButton = question.FindElement(By.CssSelector("a.btn.btn-success.me-2"));
     ((IJavaScriptExecutor)Driver).ExecuteScript("arguments[0].click();", addAnswerButton);
