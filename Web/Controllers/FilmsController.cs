@@ -210,32 +210,53 @@ public class FilmsController : Controller
     }
 
     [HttpGet("Film/{filmId:guid}/Questions")]
-    public IActionResult GetQuestions(Guid filmId)
+    [HttpPost("Film/{filmId:guid}/Questions")]
+    public IActionResult GetQuestions(Guid filmId, [FromForm] List<Guid> selectedAnswers)
     {
         var film = _dbContext.Films
             .Include(f => f.Questions)
+            .ThenInclude(q => q.Answers)
             .FirstOrDefault(f => f.Id == filmId);
 
-        if (film is null)
+        if (film == null)
         {
             return NotFound();
         }
 
-        var random = new Random();
+        var questions = film.Questions.Take(film.QuestionsNumber).ToList();
+        int correctAnswers = 0;
+
+        if (selectedAnswers != null && selectedAnswers.Any())
+        {
+            foreach (var answerId in selectedAnswers)
+            {
+                var answer = _dbContext.Answers.FirstOrDefault(a => a.Id == answerId);
+                if (answer != null && answer.IsTrue)
+                {
+                    correctAnswers++;
+                }
+            }
+
+            ViewBag.TestCompleted = true;
+            ViewBag.CorrectAnswers = correctAnswers;
+            ViewBag.TotalQuestions = questions.Count;
+        }
+        else
+        {
+            ViewBag.TestCompleted = false;
+        }
 
         var viewModel = new FilmQuestionsVm
         {
             FilmId = film.Id,
             FilmName = film.Name,
-            Questions = film.Questions
-                .AsEnumerable()
-                .OrderBy(_ => random.Next())
-                .Take(film.QuestionsNumber)
-                .ToList()
+            Questions = questions
         };
 
         return View(viewModel);
     }
+
+
 
     [HttpGet("AddAnswer")]
     public IActionResult AddAnswer(Guid questionId)
@@ -306,4 +327,6 @@ public class FilmsController : Controller
 
         return RedirectToAction("AddAnswer", new { questionId = questionId });
     }
+
+
 }

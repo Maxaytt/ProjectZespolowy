@@ -1,31 +1,38 @@
 ﻿@model Domain.ViewModels.FilmQuestionsVm
 
-@{
-    ViewData["Title"] = "Film questions";
-}
-
 <h1>@Model.FilmName</h1>
-<h2 class="ps-3">Test</h2>
 
-<div>
-    @if (Model.Questions.Any())
-    {
-        <ol class="list-group list-group-numbered">
-            @foreach (var question in Model.Questions)
-            {
-                <li class="list-group-item d-flex align-items-center">
-                    <span>@question.Text</span>
-                </li>
-            }
-        </ol>
-    }
-    else
-    {
-        <p>No questions.</p>
-    }
-</div>
+@if (ViewBag.TestCompleted != true)
+{
+    <form asp-action="GetQuestions" method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="filmId" value="@Model.FilmId" />
+        @for (int i = 0; i < Model.Questions.Count; i++)
+        {
+            <div class="mb-3">
+                <h4>@Model.Questions[i].Text</h4>
+                @foreach (var answer in Model.Questions[i].Answers)
+                {
+                    <div class="form-check">
+                        <input type="radio"
+                               class="form-check-input"
+                               id="question-@i-answer-@answer.Id"
+                               name="selectedAnswers[@i]"
+                               value="@answer.Id"
+                               required />
+                        <label class="form-check-label" for="question-@i-answer-@answer.Id">@answer.Text</label>
+                    </div>
+                }
+            </div>
+        }
+        <button type="submit" class="btn btn-success">Submit</button>
+    </form>
 
-<div style="margin-top: 20px;">
-    <a href="@Url.Action("Index", "Home")" class="btn btn-success">Finish</a>
-</div>
-
+}
+else
+{
+    <div class="alert alert-success" role="alert">
+        You answered correctly on @ViewBag.CorrectAnswers out of @ViewBag.TotalQuestions questions.
+    </div>
+    <a href="@Url.Action("Index", "Home")" class="btn btn-primary">Back to Home</a>
+}
