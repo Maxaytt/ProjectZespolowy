@@ -1,8 +1,11 @@
-﻿using Infrastructure;
+﻿using System.Security.Claims;
+using Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Domain.Models;
 using Domain.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using OpenQA.Selenium;
 
 namespace Web.Controllers;
 
@@ -174,6 +177,7 @@ public class FilmsController : Controller
         return View(viewModel);
     }
     
+    
     [HttpGet("DeleteQuestion")]
     public IActionResult DeleteQuestion(Guid id)
     {
@@ -211,7 +215,7 @@ public class FilmsController : Controller
 
     [HttpGet("Film/{filmId:guid}/Questions")]
     [HttpPost("Film/{filmId:guid}/Questions")]
-    public IActionResult GetQuestions(Guid filmId, [FromForm] List<Guid> selectedAnswers)
+    public async Task<IActionResult> GetQuestions(Guid filmId, [FromForm] List<Guid>? selectedAnswers)
     {
         var film = _dbContext.Films
             .Include(f => f.Questions)
@@ -225,17 +229,31 @@ public class FilmsController : Controller
 
         var questions = film.Questions.Take(film.QuestionsNumber).ToList();
         int correctAnswers = 0;
-
-        if (selectedAnswers != null && selectedAnswers.Any())
+        
+        if (selectedAnswers is not null && selectedAnswers.Any())
         {
-            foreach (var answerId in selectedAnswers)
+            var user = await GetUser();
+            var testResult = new TestResult
             {
-                var answer = _dbContext.Answers.FirstOrDefault(a => a.Id == answerId);
-                if (answer != null && answer.IsTrue)
+                Id = Guid.NewGuid(),
+                UserId = user.Id, 
+                FilmId = filmId,  
+                Timestamp = DateTime.UtcNow,
+                Answers = []
+            };
+            foreach (var answer in selectedAnswers
+                         .Select(answerId => _dbContext.Answers.FirstOrDefault(a => a.Id == answerId)))
+            {
+                if (answer is { IsTrue: true })
                 {
                     correctAnswers++;
                 }
+                if (answer is not null)
+                    testResult.Answers.Add(answer);
             }
+            
+            _dbContext.TestResults.Add(testResult);
+            await _dbContext.SaveChangesAsync();
 
             ViewBag.TestCompleted = true;
             ViewBag.CorrectAnswers = correctAnswers;
@@ -328,5 +346,25 @@ public class FilmsController : Controller
         return RedirectToAction("AddAnswer", new { questionId = questionId });
     }
 
+    private async Task<User> GetUser()
+    {
+        var userIdClaim = HttpContext.User.Claims
+            .ToList()
+            .FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+
+        if (!Guid.TryParse(userIdClaim?.Value, out var userId))
+        {
+            throw new BadHttpRequestException("Invalid user ID format.");
+        }
+
+        var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == userId);
+
+        if (user is null)
+        {
+            throw new NotFoundException($"User with ID '{userId}' not found.");
+        }
+
+        return user;
+    }
 
 }

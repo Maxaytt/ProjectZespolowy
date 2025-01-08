@@ -1,0 +1,23 @@
+@model List<Domain.ViewModels.GetTestHistoryVm>
+
+<div class="container mt-4">
+    <table class="table table-striped table-bordered">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col">Film Name</th>
+            <th scope="col">Date</th>
+            <th scope="col">Result</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var result in Model)
+        {
+        <tr>
+            <td>@result.Filmname</td>
+            <td>@result.Timestamp.ToString("dd.MM.yyyy")</td>
+            <td>@result.CorrectAnswers/@result.AnswersCount</td>
+        </tr>
+        }
+        </tbody>
+    </table>
+</div>
