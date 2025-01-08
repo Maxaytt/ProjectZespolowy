@@ -55,6 +55,52 @@ public void Should_AddAnswer_When_ValidData()
 
     wait.Until(d => d.FindElements(By.CssSelector("ul.list-group > li.list-group-item")).Any(a => a.Text.Contains(AnswerText)));
 }
+
+    [Fact, TestPriority(1)]
+public void Should_DeleteAnswer_When_Exists()
+{
+    Login();
+
+    Driver.Navigate().GoToUrl($"{BaseUrl}Home/Index");
+    var wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(30));
+
+    wait.Until(driver => ((IJavaScriptExecutor)driver).ExecuteScript("return document.readyState").ToString() == "complete");
+
+    var firstFilmEditButton = wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("a[href*='/Films/Edit']")));
+    ((IJavaScriptExecutor)Driver).ExecuteScript("arguments[0].click();", firstFilmEditButton);
+
+    wait.Until(ExpectedConditions.ElementIsVisible(By.Id("questionText")));
+
+    var questionElements = Driver.FindElements(By.CssSelector(".rounded.p-3.mb-3.bg-light"));
+    var question = questionElements.FirstOrDefault(q => q.Text.Contains(QuestionText));
+
+    if (question != null)
+    {
+        
+        wait.Until(ExpectedConditions.ElementExists(By.CssSelector("form.d-inline")));
+        
+        var deleteAnswerForms = question.FindElements(By.CssSelector("form.d-inline"));
+
+        if (deleteAnswerForms.Count > 0)
+        {
+            foreach (var form in deleteAnswerForms)
+            {
+                Console.WriteLine(form.GetAttribute("innerHTML"));
+            }
+
+            var deleteAnswerButton = deleteAnswerForms.First().FindElement(By.CssSelector("button.btn-danger.btn-sm"));
+
+            ((IJavaScriptExecutor)Driver).ExecuteScript("arguments[0].click();", deleteAnswerButton);
+
+            wait.Until(d => !d.FindElements(By.CssSelector(".rounded.p-3.mb-3.bg-light")).Any(q => q.Text.Contains(QuestionText)));
+
+            question = Driver.FindElements(By.CssSelector(".rounded.p-3.mb-3.bg-light")).FirstOrDefault(q => q.Text.Contains(QuestionText)); 
+            question.ShouldBeNull();
+        }
+    }
+}
+
+
     private void Login()
     {
         Driver.Navigate().GoToUrl(LoginUrl);
