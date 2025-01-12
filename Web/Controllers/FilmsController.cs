@@ -20,6 +20,7 @@ public class FilmsController : Controller
     }
 
     [HttpGet("{id:guid}")]
+    [Authorize]
     public IActionResult GetById(Guid id)
     {
         var film = _dbContext.Films.Find(id);
@@ -31,6 +32,7 @@ public class FilmsController : Controller
 
 
     [HttpGet("Create")]
+    [Authorize(Roles = "Admin")]
     public IActionResult Create()
     {
         return View();
@@ -38,6 +40,7 @@ public class FilmsController : Controller
 
 
     [HttpPost("Create")]
+    [Authorize(Roles = "Admin")]
     public IActionResult Create(CreateEditFilmVm film)
     {
         var imageForDatabse = new Image
@@ -76,6 +79,7 @@ public class FilmsController : Controller
     }
 
     [HttpGet("Edit/{id:guid}")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Edit(Guid id)
     {
         var film = await _dbContext.Films
@@ -95,6 +99,7 @@ public class FilmsController : Controller
     }
     
     [HttpPost("Edit")]
+    [Authorize(Roles = "Admin")]
     public IActionResult EditPost(CreateEditFilmVm viewModel)
     {
         var existingFilm = _dbContext.Films
@@ -130,6 +135,7 @@ public class FilmsController : Controller
     }
 
     [HttpGet("Delete")]
+    [Authorize(Roles = "Admin")]
     public IActionResult Delete(Guid id)
     {
         var film = _dbContext.Films.Find(id);
@@ -143,6 +149,7 @@ public class FilmsController : Controller
     }
 
     [HttpGet("GetFilmAsResource/{id:guid}")]
+    [Authorize]
     public IActionResult GetFilmAsResource(Guid id)
     {
         var film = _dbContext.Films.Find(id);
@@ -152,6 +159,7 @@ public class FilmsController : Controller
     }
 
     [HttpGet("GetImageAsResource/{id:guid}")]
+    [Authorize]
     public IActionResult GetImageAsResource(Guid id)
     {
         var image = _dbContext.Images.Find(id);
@@ -161,6 +169,7 @@ public class FilmsController : Controller
     }
 
     [HttpGet("PlayFilm/{id:guid}")]
+    [Authorize]
     public IActionResult PlayFilm(Guid id)
     {
         var film = _dbContext.Films.Find(id);
@@ -179,6 +188,7 @@ public class FilmsController : Controller
     
     
     [HttpGet("DeleteQuestion")]
+    [Authorize(Roles = "Admin")]
     public IActionResult DeleteQuestion(Guid id)
     {
         var question = _dbContext.Questions.Find(id);
@@ -198,6 +208,7 @@ public class FilmsController : Controller
     }
 
     [HttpGet("AddQuestion")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> AddQuestion(string text, Guid filmId)
     {
         var question = new Question
@@ -215,6 +226,7 @@ public class FilmsController : Controller
 
     [HttpGet("Film/{filmId:guid}/Questions")]
     [HttpPost("Film/{filmId:guid}/Questions")]
+    [Authorize]
     public async Task<IActionResult> GetQuestions(Guid filmId, [FromForm] List<Guid>? selectedAnswers)
     {
         var film = _dbContext.Films
@@ -277,6 +289,7 @@ public class FilmsController : Controller
 
 
     [HttpGet("AddAnswer")]
+    [Authorize(Roles = "Admin")]
     public IActionResult AddAnswer(Guid questionId)
     {
         var question = _dbContext.Questions
@@ -304,6 +317,7 @@ public class FilmsController : Controller
     
     [HttpPost("AddAnswer")]
     [ValidateAntiForgeryToken]
+    [Authorize(Roles = "Admin")]
     public IActionResult AddAnswer(AddAnswerVm viewModel)
     {
         if (!ModelState.IsValid)
@@ -334,6 +348,7 @@ public class FilmsController : Controller
     }
 
     [HttpPost("DeleteAnswer")]
+    [Authorize(Roles = "Admin")]
     public IActionResult DeleteAnswer(Guid id, Guid questionId)
     {
         var answer = _dbContext.Answers.Find(id);
