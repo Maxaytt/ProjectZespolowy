@@ -32,6 +32,7 @@ public class FilmsController : Controller
     /// <param name="id">The identifier of the film.</param>
     /// <returns>The film with the specified ID, or a 404 error if not found.</returns>
     [HttpGet("{id:guid}")]
+    [Authorize]
     public IActionResult GetById(Guid id)
     {
         var film = _dbContext.Films.Find(id);
@@ -46,6 +47,7 @@ public class FilmsController : Controller
     /// </summary>
     /// <returns>The view for creating a new film.</returns>
     [HttpGet("Create")]
+    [Authorize(Roles = "Admin")]
     public IActionResult Create()
     {
         return View();
@@ -57,6 +59,7 @@ public class FilmsController : Controller
     /// <param name="film">The view model for creating a new film.</param>
     /// <returns>Redirects to the home page after successfully creating the film.</returns>
     [HttpPost("Create")]
+    [Authorize(Roles = "Admin")]
     public IActionResult Create(CreateEditFilmVm film)
     {
         var imageForDatabse = new Image
@@ -100,6 +103,7 @@ public class FilmsController : Controller
     /// <param name="id">The identifier of the film to edit.</param>
     /// <returns>The view for editing the film.</returns>
     [HttpGet("Edit/{id:guid}")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Edit(Guid id)
     {
         var film = await _dbContext.Films
@@ -124,6 +128,7 @@ public class FilmsController : Controller
     /// <param name="viewModel">The updated view model for the film.</param>
     /// <returns>Redirects to the home page after updating the film.</returns>
     [HttpPost("Edit")]
+    [Authorize(Roles = "Admin")]
     public IActionResult EditPost(CreateEditFilmVm viewModel)
     {
         var existingFilm = _dbContext.Films
@@ -164,6 +169,7 @@ public class FilmsController : Controller
     /// <param name="id">The identifier of the film to delete.</param>
     /// <returns>Redirects to the home page after deleting the film.</returns>
     [HttpGet("Delete")]
+    [Authorize(Roles = "Admin")]
     public IActionResult Delete(Guid id)
     {
         var film = _dbContext.Films.Find(id);
@@ -182,6 +188,7 @@ public class FilmsController : Controller
     /// <param name="id">The identifier of the film to retrieve.</param>
     /// <returns>The film content or a 404 error if not found.</returns>
     [HttpGet("GetFilmAsResource/{id:guid}")]
+    [Authorize]
     public IActionResult GetFilmAsResource(Guid id)
     {
         var film = _dbContext.Films.Find(id);
@@ -196,6 +203,7 @@ public class FilmsController : Controller
     /// <param name="id">The identifier of the image to retrieve.</param>
     /// <returns>The image content or a 404 error if not found.</returns>
     [HttpGet("GetImageAsResource/{id:guid}")]
+    [Authorize]
     public IActionResult GetImageAsResource(Guid id)
     {
         var image = _dbContext.Images.Find(id);
@@ -210,6 +218,7 @@ public class FilmsController : Controller
     /// <param name="id">The identifier of the film to play.</param>
     /// <returns>The view for playing the film.</returns>
     [HttpGet("PlayFilm/{id:guid}")]
+    [Authorize]
     public IActionResult PlayFilm(Guid id)
     {
         var film = _dbContext.Films.Find(id);
@@ -232,6 +241,7 @@ public class FilmsController : Controller
     /// <param name="id">The identifier of the question to delete.</param>
     /// <returns>Redirects to the referer page or to the home page after deletion.</returns>
     [HttpGet("DeleteQuestion")]
+    [Authorize(Roles = "Admin")]
     public IActionResult DeleteQuestion(Guid id)
     {
         var question = _dbContext.Questions.Find(id);
@@ -257,6 +267,7 @@ public class FilmsController : Controller
     /// <param name="filmId">The identifier of the film the question belongs to.</param>
     /// <returns>Redirects to the film edit page after adding the question.</returns>
     [HttpGet("AddQuestion")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> AddQuestion(string text, Guid filmId)
     {
         var question = new Question
@@ -280,6 +291,7 @@ public class FilmsController : Controller
     /// <returns>The view displaying the questions and the user's test results.</returns>
     [HttpGet("Film/{filmId:guid}/Questions")]
     [HttpPost("Film/{filmId:guid}/Questions")]
+    [Authorize]
     public async Task<IActionResult> GetQuestions(Guid filmId, [FromForm] List<Guid>? selectedAnswers)
     {
         var film = _dbContext.Films
@@ -345,6 +357,7 @@ public class FilmsController : Controller
     /// <param name="questionId">The identifier of the question for which to add an answer.</param>
     /// <returns>The view for adding answers to the specified question.</returns>
     [HttpGet("AddAnswer")]
+    [Authorize(Roles = "Admin")]
     public IActionResult AddAnswer(Guid questionId)
     {
         var question = _dbContext.Questions
@@ -377,6 +390,7 @@ public class FilmsController : Controller
     /// <returns>Redirects to the AddAnswer page to display the newly added answer.</returns>
     [HttpPost("AddAnswer")]
     [ValidateAntiForgeryToken]
+    [Authorize(Roles = "Admin")]
     public IActionResult AddAnswer(AddAnswerVm viewModel)
     {
         if (!ModelState.IsValid)
@@ -413,6 +427,7 @@ public class FilmsController : Controller
     /// <param name="questionId">The identifier of the question to which the answer belongs.</param>
     /// <returns>Redirects to the AddAnswer page for the specified question after deletion.</returns>
     [HttpPost("DeleteAnswer")]
+    [Authorize(Roles = "Admin")]
     public IActionResult DeleteAnswer(Guid id, Guid questionId)
     {
         var answer = _dbContext.Answers.Find(id);

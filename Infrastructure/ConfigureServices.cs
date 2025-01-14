@@ -38,7 +38,11 @@ public static class ConfigureServices
             options.UseSqlServer(connectionString, builder => builder.MigrationsAssembly("Infrastructure")));
 
         services.AddIdentity<User, IdentityRole<Guid>>()
-            .AddEntityFrameworkStores<AppDbContext>();
+            .AddEntityFrameworkStores<AppDbContext>()
+            .AddDefaultTokenProviders();
+
+            
+        
 
         return services.AddHostedService<DbInitializer>();
     }
