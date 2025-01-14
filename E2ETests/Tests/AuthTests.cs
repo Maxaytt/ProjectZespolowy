@@ -8,6 +8,9 @@ using Xunit.Priority;
 
 namespace E2ETests.Tests;
 
+/// <summary>
+/// Tests related to user authentication.
+/// </summary>
 [TestCaseOrderer("E2ETests.Services.PriorityOrderer", "E2ETests")]
 public class AuthTests : IDisposable
 {
@@ -15,6 +18,9 @@ public class AuthTests : IDisposable
 
     private const string BaseUrl = "http://localhost:5000/";
     
+    /// <summary>
+    /// Tests registration and handles conflict or redirection.
+    /// </summary>
     [Fact, TestPriority(0)]
     public void Should_RedirectOrConflict_When_Register()
     {
@@ -50,6 +56,9 @@ public class AuthTests : IDisposable
         }
     }
     
+    /// <summary>
+    /// Tests login and redirection after login.
+    /// </summary>
     [Fact, TestPriority(1)]
     public void Should_Redirect_When_Login()
     {
@@ -69,6 +78,9 @@ public class AuthTests : IDisposable
         Driver.Url.ShouldBe("http://localhost:5000/Home/Index");
     }
     
+    /// <summary>
+    /// Tests logout functionality and redirection to login page.
+    /// </summary>
     [Fact, TestPriority(2)]
     public void Should_RedirectToLogin_When_Logout()
     {
@@ -93,6 +105,9 @@ public class AuthTests : IDisposable
         Driver.Url.ShouldBe($"{BaseUrl}");
     }
 
+    /// <summary>
+    /// Disposes the driver after tests.
+    /// </summary>
     public void Dispose()
     {
         Driver.Quit();

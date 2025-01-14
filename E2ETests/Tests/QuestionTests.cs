@@ -6,6 +6,9 @@ using Shouldly;
 
 namespace E2ETests.Tests;
 
+/// <summary>
+/// Question-related tests.
+/// </summary>
 [TestCaseOrderer("E2ETests.Services.PriorityOrderer", "E2ETests")]
 public class QuestionTests : IDisposable
 {
@@ -19,6 +22,9 @@ public class QuestionTests : IDisposable
     private readonly string _incompleteVideoPath = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "TestVideo.mp4");
     private readonly string _incompleteImagePath = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "TestImage.jpg");
     
+    /// <summary>
+    /// Tests saving a question.
+    /// </summary>
     [Fact, TestPriority(0)]
     public void Should_SaveQuestion_When_AddQuestion()
     {
@@ -46,6 +52,9 @@ public class QuestionTests : IDisposable
         questions.Any(q => q.Text == QuestionText).ShouldBeTrue();
     }
     
+    /// <summary>
+    /// Logs in using the provided credentials.
+    /// </summary>
     private void Login()
     {
         Driver.Navigate().GoToUrl(LoginUrl);
@@ -55,6 +64,9 @@ public class QuestionTests : IDisposable
         Driver.FindElement(By.CssSelector("button[type='submit']")).Click();
     }
 
+    /// <summary>
+    /// Creates a film with the provided video and image paths.
+    /// </summary>
     private void CreateFilm(string videoPath, string imagePath)
     {
         var wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(10));
@@ -74,6 +86,9 @@ public class QuestionTests : IDisposable
         wait.Until(d => d.Url == $"{BaseUrl}Home/Index");
     }
     
+    /// <summary>
+    /// Disposes the driver after tests.
+    /// </summary>
     public void Dispose()
     {
         Driver.Quit();

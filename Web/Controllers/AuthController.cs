@@ -7,17 +7,31 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Web.Controllers;
 
+/// <summary>
+/// Controller responsible for handling user authentication processes.
+/// </summary>
 public class AuthController(SignInManager<User> signIn, UserManager<User> userManager) : Controller
 {
     private readonly SignInManager<User> signIn = signIn;
     private readonly UserManager<User> userManager = userManager;
 
+    /// <summary>
+    /// Displays the login page.
+    /// </summary>
+    /// <returns>The login view.</returns>
     [HttpGet]
     public IActionResult Login()
     {
         return View("Login");
     }
 
+    // <summary>
+    /// Handles user login attempts.
+    /// </summary>
+    /// <param name="email">The email address of the user.</param>
+    /// <param name="password">The password of the user.</param>
+    /// <returns>Redirects to the home page if successful or returns an error.</returns>
+    /// <exception cref="Exception">Thrown when login fails.</exception>
     [HttpPost]
     public async Task<IActionResult> Login(string email, string password)
     {
@@ -34,6 +48,10 @@ public class AuthController(SignInManager<User> signIn, UserManager<User> userMa
         return RedirectToAction("Index", "Home");
     }
 
+    /// <summary>
+    /// Displays the registration page.
+    /// </summary>
+    /// <returns>The registration view with an empty model.</returns>
     [HttpGet]
     public IActionResult Register()
     {
@@ -41,6 +59,12 @@ public class AuthController(SignInManager<User> signIn, UserManager<User> userMa
         return View("Register", model);
     }
 
+    /// <summary>
+    /// Handles user registration.
+    /// </summary>
+    /// <param name="model">The registration model containing user data.</param>
+    /// <returns>Redirects to the login page if successful or reloads the registration page.</returns>
+    /// <exception cref="Exception">Thrown when user registration fails.</exception>
     [HttpPost]
     public async Task<IActionResult> Register(RegisterViewModel model)
     {
@@ -70,6 +94,10 @@ public class AuthController(SignInManager<User> signIn, UserManager<User> userMa
         return RedirectToAction("Login", "Auth");
     }
 
+    /// <summary>
+    /// Logs out the currently authenticated user.
+    /// </summary>
+    /// <returns>Redirects to the login page</returns>
     [Authorize]
     public async Task<IActionResult> Logout()
     {

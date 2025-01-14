@@ -5,12 +5,18 @@ using Xunit.Priority;
 
 namespace E2ETests.Tests;
 
+/// <summary>
+/// Profile-related tests.
+/// </summary>
 public class ProfileTests : IDisposable
 {
     public readonly IWebDriver Driver = new EdgeDriver();
 
     private const string BaseUrl = "http://localhost:5000/";
     
+    /// <summary>
+    /// Tests updating user profile.
+    /// </summary>
    [Fact, Priority(0)]
     public void Should_UpdateUser_When_EditProfile()
     {   
@@ -49,6 +55,9 @@ public class ProfileTests : IDisposable
     }
         
    
+    /// <summary>
+    /// Disposes the driver after tests.
+    /// </summary>
     public void Dispose()
     {
         Driver.Quit();

@@ -7,6 +7,9 @@ using Shouldly;
 
 namespace E2ETests.Tests;
 
+/// <summary>
+/// Tests for adding and deleting answers.
+/// </summary>
 [TestCaseOrderer("E2ETests.Services.PriorityOrderer", "E2ETests")]
 public class AnswerTests : IDisposable
 {
@@ -18,6 +21,9 @@ public class AnswerTests : IDisposable
     private const string QuestionText = "Test Question";
     private const string AnswerText = "add Answer for TESTS";
 
+    /// <summary>
+    /// Tests adding an answer to a question.
+    /// </summary>
 [Fact, TestPriority(0)]
 public void Should_AddAnswer_When_ValidData()
 {
@@ -56,6 +62,9 @@ public void Should_AddAnswer_When_ValidData()
     wait.Until(d => d.FindElements(By.CssSelector("ul.list-group > li.list-group-item")).Any(a => a.Text.Contains(AnswerText)));
 }
 
+    /// <summary>
+    /// Tests deleting an existing answer.
+    /// </summary>
     [Fact, TestPriority(1)]
 public void Should_DeleteAnswer_When_Exists()
 {
@@ -100,7 +109,9 @@ public void Should_DeleteAnswer_When_Exists()
     }
 }
 
-
+    /// <summary>
+    /// Logs in with predefined credentials.
+    /// </summary>
     private void Login()
     {
         Driver.Navigate().GoToUrl(LoginUrl);
@@ -112,6 +123,9 @@ public void Should_DeleteAnswer_When_Exists()
         wait.Until(ExpectedConditions.UrlContains("Home/Index"));
     }
 
+    /// <summary>
+    /// Disposes the driver after tests.
+    /// </summary>
     public void Dispose()
     {
         Driver.Quit();

@@ -6,6 +6,9 @@ using Shouldly;
 
 namespace E2ETests.Tests;
 
+/// <summary>
+/// Tests related to film management.
+/// </summary>
 [TestCaseOrderer("E2ETests.Services.PriorityOrderer", "E2ETests")]
 public class FilmTests : IDisposable
 {
@@ -18,6 +21,9 @@ public class FilmTests : IDisposable
     private readonly string _incompleteVideoPath = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "TestVideo.mp4");
     private readonly string _incompleteImagePath = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "TestImage.jpg");
 
+    /// <summary>
+    /// Tests film creation with valid data.
+    /// </summary>
     [Fact, TestPriority(0)]
     public void Should_AddFilm_When_ValidData()
     {
@@ -63,6 +69,9 @@ public class FilmTests : IDisposable
         Driver.FindElement(By.ClassName("film-item")).ShouldNotBeNull();
     }
     
+    /// <summary>
+    /// Tests film editing functionality.
+    /// </summary>
     [Fact, TestPriority(1)]
     public void Should_UpdateFilm_When_Edit()
     {
@@ -89,6 +98,9 @@ public class FilmTests : IDisposable
         updatedFilm.Count.ShouldBe(1, "Updated film with unique name was not found.");
     }
 
+    /// <summary>
+    /// Tests film deletion functionality.
+    /// </summary>
     [Fact, TestPriority(2)]
     public void Should_DeleteFilm_When_Delete()
     {
@@ -112,6 +124,9 @@ public class FilmTests : IDisposable
         isFilmDeleted.ShouldBeTrue("The film was not removed from the list.");
     }
 
+    /// <summary>
+    /// Handles the login process for tests.
+    /// </summary>
     private void Login()
     {
         Driver.Navigate().GoToUrl(LoginUrl);
@@ -121,6 +136,9 @@ public class FilmTests : IDisposable
         Driver.FindElement(By.CssSelector("button[type='submit']")).Click();
     }
     
+    /// <summary>
+    /// Disposes the driver after tests.
+    /// </summary>
     public void Dispose()
     {
         Driver.Quit();

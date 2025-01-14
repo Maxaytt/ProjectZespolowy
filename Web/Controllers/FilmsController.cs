@@ -9,16 +9,28 @@ using OpenQA.Selenium;
 
 namespace Web.Controllers;
 
+/// <summary>
+/// Controller responsible for managing films in the application.
+/// </summary>
 [Route("[controller]")]
 public class FilmsController : Controller
 {
     private readonly AppDbContext _dbContext;
 
+    /// <summary>
+    /// Constructs the controller with dependency injection for the database context.
+    /// </summary>
+    /// <param name="dbContext">The database context for the application.</param>
     public FilmsController(AppDbContext dbContext)
     {
         _dbContext = dbContext;
     }
-
+    
+    /// <summary>
+    /// Retrieves a film by its unique identifier.
+    /// </summary>
+    /// <param name="id">The identifier of the film.</param>
+    /// <returns>The film with the specified ID, or a 404 error if not found.</returns>
     [HttpGet("{id:guid}")]
     public IActionResult GetById(Guid id)
     {
@@ -29,14 +41,21 @@ public class FilmsController : Controller
         return Ok(film);
     }
 
-
+    /// <summary>
+    /// Displays the page for creating a new film.
+    /// </summary>
+    /// <returns>The view for creating a new film.</returns>
     [HttpGet("Create")]
     public IActionResult Create()
     {
         return View();
     }
 
-
+    /// <summary>
+    /// Handles the creation of a new film.
+    /// </summary>
+    /// <param name="film">The view model for creating a new film.</param>
+    /// <returns>Redirects to the home page after successfully creating the film.</returns>
     [HttpPost("Create")]
     public IActionResult Create(CreateEditFilmVm film)
     {
@@ -75,6 +94,11 @@ public class FilmsController : Controller
         return RedirectToAction("Index", "Home");
     }
 
+    /// <summary>
+    /// Displays the page for editing an existing film.
+    /// </summary>
+    /// <param name="id">The identifier of the film to edit.</param>
+    /// <returns>The view for editing the film.</returns>
     [HttpGet("Edit/{id:guid}")]
     public async Task<IActionResult> Edit(Guid id)
     {
@@ -94,6 +118,11 @@ public class FilmsController : Controller
         return View(viewModel);
     }
     
+    /// <summary>
+    /// Handles the post request for editing an existing film.
+    /// </summary>
+    /// <param name="viewModel">The updated view model for the film.</param>
+    /// <returns>Redirects to the home page after updating the film.</returns>
     [HttpPost("Edit")]
     public IActionResult EditPost(CreateEditFilmVm viewModel)
     {
@@ -129,6 +158,11 @@ public class FilmsController : Controller
         return RedirectToAction("Index", "Home");
     }
 
+    /// <summary>
+    /// Deletes a film based on its identifier.
+    /// </summary>
+    /// <param name="id">The identifier of the film to delete.</param>
+    /// <returns>Redirects to the home page after deleting the film.</returns>
     [HttpGet("Delete")]
     public IActionResult Delete(Guid id)
     {
@@ -142,6 +176,11 @@ public class FilmsController : Controller
         return RedirectToAction(nameof(Index), "Home");
     }
 
+    /// <summary>
+    /// Retrieves a film as a downloadable resource.
+    /// </summary>
+    /// <param name="id">The identifier of the film to retrieve.</param>
+    /// <returns>The film content or a 404 error if not found.</returns>
     [HttpGet("GetFilmAsResource/{id:guid}")]
     public IActionResult GetFilmAsResource(Guid id)
     {
@@ -151,6 +190,11 @@ public class FilmsController : Controller
         return File(film.Content, film.ContentType, film.Name);
     }
 
+    /// <summary>
+    /// Retrieves an image associated with a film as a downloadable resource.
+    /// </summary>
+    /// <param name="id">The identifier of the image to retrieve.</param>
+    /// <returns>The image content or a 404 error if not found.</returns>
     [HttpGet("GetImageAsResource/{id:guid}")]
     public IActionResult GetImageAsResource(Guid id)
     {
@@ -160,6 +204,11 @@ public class FilmsController : Controller
         return File(image.Content, image.ContentType, image.Caption);
     }
 
+    /// <summary>
+    /// Displays the page for playing a film.
+    /// </summary>
+    /// <param name="id">The identifier of the film to play.</param>
+    /// <returns>The view for playing the film.</returns>
     [HttpGet("PlayFilm/{id:guid}")]
     public IActionResult PlayFilm(Guid id)
     {
@@ -177,7 +226,11 @@ public class FilmsController : Controller
         return View(viewModel);
     }
     
-    
+    /// <summary>
+    /// Deletes a question associated with a film.
+    /// </summary>
+    /// <param name="id">The identifier of the question to delete.</param>
+    /// <returns>Redirects to the referer page or to the home page after deletion.</returns>
     [HttpGet("DeleteQuestion")]
     public IActionResult DeleteQuestion(Guid id)
     {
@@ -197,6 +250,12 @@ public class FilmsController : Controller
         return RedirectToAction(nameof(Index), "Home");
     }
 
+    /// <summary>
+    /// Adds a new question to a film.
+    /// </summary>
+    /// <param name="text">The text of the question.</param>
+    /// <param name="filmId">The identifier of the film the question belongs to.</param>
+    /// <returns>Redirects to the film edit page after adding the question.</returns>
     [HttpGet("AddQuestion")]
     public async Task<IActionResult> AddQuestion(string text, Guid filmId)
     {
@@ -213,6 +272,12 @@ public class FilmsController : Controller
         return RedirectToAction("Edit", new { id = filmId});
     }
 
+    /// <summary>
+    /// Retrieves and submits answers for questions associated with a film.
+    /// </summary>
+    /// <param name="filmId">The identifier of the film for which the questions are submitted.</param>
+    /// <param name="selectedAnswers">The selected answers provided by the user.</param>
+    /// <returns>The view displaying the questions and the user's test results.</returns>
     [HttpGet("Film/{filmId:guid}/Questions")]
     [HttpPost("Film/{filmId:guid}/Questions")]
     public async Task<IActionResult> GetQuestions(Guid filmId, [FromForm] List<Guid>? selectedAnswers)
@@ -273,9 +338,12 @@ public class FilmsController : Controller
 
         return View(viewModel);
     }
-
-
-
+    
+    /// <summary>
+    /// Displays the page for adding a new answer to a specific question.
+    /// </summary>
+    /// <param name="questionId">The identifier of the question for which to add an answer.</param>
+    /// <returns>The view for adding answers to the specified question.</returns>
     [HttpGet("AddAnswer")]
     public IActionResult AddAnswer(Guid questionId)
     {
@@ -302,6 +370,11 @@ public class FilmsController : Controller
         return View(viewModel);
     }
     
+    /// <summary>
+    /// Handles the creation of a new answer for a specific question.
+    /// </summary>
+    /// <param name="viewModel">The view model containing the details of the new answer.</param>
+    /// <returns>Redirects to the AddAnswer page to display the newly added answer.</returns>
     [HttpPost("AddAnswer")]
     [ValidateAntiForgeryToken]
     public IActionResult AddAnswer(AddAnswerVm viewModel)
@@ -333,6 +406,12 @@ public class FilmsController : Controller
         return RedirectToAction("AddAnswer", new { questionId = viewModel.QuestionId });
     }
 
+    /// <summary>
+    /// Deletes an answer from the database.
+    /// </summary>
+    /// <param name="id">The identifier of the answer to delete.</param>
+    /// <param name="questionId">The identifier of the question to which the answer belongs.</param>
+    /// <returns>Redirects to the AddAnswer page for the specified question after deletion.</returns>
     [HttpPost("DeleteAnswer")]
     public IActionResult DeleteAnswer(Guid id, Guid questionId)
     {
@@ -346,6 +425,12 @@ public class FilmsController : Controller
         return RedirectToAction("AddAnswer", new { questionId = questionId });
     }
 
+    /// <summary>
+    /// Retrieves the current user based on the claims in the HTTP context.
+    /// </summary>
+    /// <returns>The user associated with the current HTTP context.</returns>
+    /// <exception cref="BadHttpRequestException">Thrown if the user ID format is invalid.</exception>
+    /// <exception cref="NotFoundException">Thrown if the user is not found in the database.</exception>
     private async Task<User> GetUser()
     {
         var userIdClaim = HttpContext.User.Claims
@@ -366,5 +451,4 @@ public class FilmsController : Controller
 
         return user;
     }
-
 }

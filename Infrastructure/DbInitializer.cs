@@ -4,8 +4,14 @@ using Microsoft.Extensions.Hosting;
 
 namespace Infrastructure;
 
+/// <summary>
+/// Initializes the database by applying pending migrations on application startup.
+/// </summary>
 public class DbInitializer(IServiceScopeFactory scopeFactory) : IHostedService
 {
+    /// <summary>
+    /// Applies pending migrations to the database on application startup.
+    /// </summary>
     public async Task StartAsync(CancellationToken cancellationToken)
     {
         await using var scope = scopeFactory.CreateAsyncScope();
@@ -13,5 +19,8 @@ public class DbInitializer(IServiceScopeFactory scopeFactory) : IHostedService
         await context.Database.MigrateAsync(cancellationToken);
     }
 
+    /// <summary>
+    /// Task to stop the hosted service.
+    /// </summary>
     public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
 }
