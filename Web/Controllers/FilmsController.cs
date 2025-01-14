@@ -1,8 +1,11 @@
-﻿using Infrastructure;
+﻿using System.Security.Claims;
+using Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Domain.Models;
 using Domain.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using OpenQA.Selenium;
 
 namespace Web.Controllers;
 
@@ -17,6 +20,7 @@ public class FilmsController : Controller
     }
 
     [HttpGet("{id:guid}")]
+    [Authorize]
     public IActionResult GetById(Guid id)
     {
         var film = _dbContext.Films.Find(id);
@@ -28,6 +32,7 @@ public class FilmsController : Controller
 
 
     [HttpGet("Create")]
+    [Authorize(Roles = "Admin")]
     public IActionResult Create()
     {
         return View();
@@ -35,6 +40,7 @@ public class FilmsController : Controller
 
 
     [HttpPost("Create")]
+    [Authorize(Roles = "Admin")]
     public IActionResult Create(CreateEditFilmVm film)
     {
         var imageForDatabse = new Image
@@ -73,6 +79,7 @@ public class FilmsController : Controller
     }
 
     [HttpGet("Edit/{id:guid}")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Edit(Guid id)
     {
         var film = await _dbContext.Films
@@ -92,6 +99,7 @@ public class FilmsController : Controller
     }
     
     [HttpPost("Edit")]
+    [Authorize(Roles = "Admin")]
     public IActionResult EditPost(CreateEditFilmVm viewModel)
     {
         var existingFilm = _dbContext.Films
@@ -127,6 +135,7 @@ public class FilmsController : Controller
     }
 
     [HttpGet("Delete")]
+    [Authorize(Roles = "Admin")]
     public IActionResult Delete(Guid id)
     {
         var film = _dbContext.Films.Find(id);
@@ -140,6 +149,7 @@ public class FilmsController : Controller
     }
 
     [HttpGet("GetFilmAsResource/{id:guid}")]
+    [Authorize]
     public IActionResult GetFilmAsResource(Guid id)
     {
         var film = _dbContext.Films.Find(id);
@@ -149,6 +159,7 @@ public class FilmsController : Controller
     }
 
     [HttpGet("GetImageAsResource/{id:guid}")]
+    [Authorize]
     public IActionResult GetImageAsResource(Guid id)
     {
         var image = _dbContext.Images.Find(id);
@@ -158,6 +169,7 @@ public class FilmsController : Controller
     }
 
     [HttpGet("PlayFilm/{id:guid}")]
+    [Authorize]
     public IActionResult PlayFilm(Guid id)
     {
         var film = _dbContext.Films.Find(id);
@@ -174,7 +186,9 @@ public class FilmsController : Controller
         return View(viewModel);
     }
     
+    
     [HttpGet("DeleteQuestion")]
+    [Authorize(Roles = "Admin")]
     public IActionResult DeleteQuestion(Guid id)
     {
         var question = _dbContext.Questions.Find(id);
@@ -194,6 +208,7 @@ public class FilmsController : Controller
     }
 
     [HttpGet("AddQuestion")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> AddQuestion(string text, Guid filmId)
     {
         var question = new Question
@@ -211,7 +226,8 @@ public class FilmsController : Controller
 
     [HttpGet("Film/{filmId:guid}/Questions")]
     [HttpPost("Film/{filmId:guid}/Questions")]
-    public IActionResult GetQuestions(Guid filmId, [FromForm] List<Guid> selectedAnswers)
+    [Authorize]
+    public async Task<IActionResult> GetQuestions(Guid filmId, [FromForm] List<Guid>? selectedAnswers)
     {
         var film = _dbContext.Films
             .Include(f => f.Questions)
@@ -225,17 +241,31 @@ public class FilmsController : Controller
 
         var questions = film.Questions.Take(film.QuestionsNumber).ToList();
         int correctAnswers = 0;
-
-        if (selectedAnswers != null && selectedAnswers.Any())
+        
+        if (selectedAnswers is not null && selectedAnswers.Any())
         {
-            foreach (var answerId in selectedAnswers)
+            var user = await GetUser();
+            var testResult = new TestResult
             {
-                var answer = _dbContext.Answers.FirstOrDefault(a => a.Id == answerId);
-                if (answer != null && answer.IsTrue)
+                Id = Guid.NewGuid(),
+                UserId = user.Id, 
+                FilmId = filmId,  
+                Timestamp = DateTime.UtcNow,
+                Answers = []
+            };
+            foreach (var answer in selectedAnswers
+                         .Select(answerId => _dbContext.Answers.FirstOrDefault(a => a.Id == answerId)))
+            {
+                if (answer is { IsTrue: true })
                 {
                     correctAnswers++;
                 }
+                if (answer is not null)
+                    testResult.Answers.Add(answer);
             }
+            
+            _dbContext.TestResults.Add(testResult);
+            await _dbContext.SaveChangesAsync();
 
             ViewBag.TestCompleted = true;
             ViewBag.CorrectAnswers = correctAnswers;
@@ -259,6 +289,7 @@ public class FilmsController : Controller
 
 
     [HttpGet("AddAnswer")]
+    [Authorize(Roles = "Admin")]
     public IActionResult AddAnswer(Guid questionId)
     {
         var question = _dbContext.Questions
@@ -286,6 +317,7 @@ public class FilmsController : Controller
     
     [HttpPost("AddAnswer")]
     [ValidateAntiForgeryToken]
+    [Authorize(Roles = "Admin")]
     public IActionResult AddAnswer(AddAnswerVm viewModel)
     {
         if (!ModelState.IsValid)
@@ -316,6 +348,7 @@ public class FilmsController : Controller
     }
 
     [HttpPost("DeleteAnswer")]
+    [Authorize(Roles = "Admin")]
     public IActionResult DeleteAnswer(Guid id, Guid questionId)
     {
         var answer = _dbContext.Answers.Find(id);
@@ -328,5 +361,25 @@ public class FilmsController : Controller
         return RedirectToAction("AddAnswer", new { questionId = questionId });
     }
 
+    private async Task<User> GetUser()
+    {
+        var userIdClaim = HttpContext.User.Claims
+            .ToList()
+            .FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+
+        if (!Guid.TryParse(userIdClaim?.Value, out var userId))
+        {
+            throw new BadHttpRequestException("Invalid user ID format.");
+        }
+
+        var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == userId);
+
+        if (user is null)
+        {
+            throw new NotFoundException($"User with ID '{userId}' not found.");
+        }
+
+        return user;
+    }
 
 }

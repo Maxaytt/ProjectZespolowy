@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Domain.Models;
 using Domain.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace Web.Controllers;
@@ -69,6 +70,7 @@ public class AuthController(SignInManager<User> signIn, UserManager<User> userMa
         return RedirectToAction("Login", "Auth");
     }
 
+    [Authorize]
     public async Task<IActionResult> Logout()
     {
         await signIn.SignOutAsync();
