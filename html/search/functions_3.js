@@ -1,0 +1,8 @@
+var searchData=
+[
+  ['delete_0',['Delete',['../class_web_1_1_controllers_1_1_films_controller.html#ac984386f435063d21277872c9bb9f982',1,'Web::Controllers::FilmsController']]],
+  ['deleteanswer_1',['DeleteAnswer',['../class_web_1_1_controllers_1_1_films_controller.html#a95d47b2bbc650a0590628629ea331def',1,'Web::Controllers::FilmsController']]],
+  ['deletequestion_2',['DeleteQuestion',['../class_web_1_1_controllers_1_1_films_controller.html#a259e67a53370c13e3f3b8ba73272150d',1,'Web::Controllers::FilmsController']]],
+  ['dispose_3',['Dispose',['../class_e2_e_tests_1_1_tests_1_1_answer_tests.html#a488cace41c357b49b8dca6f5f9baa5d6',1,'E2ETests.Tests.AnswerTests.Dispose()'],['../class_e2_e_tests_1_1_tests_1_1_auth_tests.html#a68f2d68454ed3565d179082f82545065',1,'E2ETests.Tests.AuthTests.Dispose()'],['../class_e2_e_tests_1_1_tests_1_1_film_tests.html#add6f5c0035d82128efbb8841154972b2',1,'E2ETests.Tests.FilmTests.Dispose()'],['../class_e2_e_tests_1_1_tests_1_1_profile_tests.html#aa9e9ab0e21fd318bd291df3cf16cfcfd',1,'E2ETests.Tests.ProfileTests.Dispose()'],['../class_e2_e_tests_1_1_tests_1_1_question_tests.html#af2c7e0fa8c68fa60c5119acd6970175a',1,'E2ETests.Tests.QuestionTests.Dispose()']]],
+  ['down_4',['Down',['../class_infrastructure_1_1_migrations_1_1_init.html#a33322413793f15b39645024a6c749f46',1,'Infrastructure.Migrations.Init.Down()'],['../class_infrastructure_1_1_migrations_1_1_add_questions_number.html#a2a0f0c5f44da0f59c4d9f44843cbac8a',1,'Infrastructure.Migrations.AddQuestionsNumber.Down()'],['../class_infrastructure_1_1_migrations_1_1_add_test_result.html#aa4c849dd72360d37fc14021682160316',1,'Infrastructure.Migrations.AddTestResult.Down()']]]
+];
